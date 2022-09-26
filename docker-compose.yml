@@ -12,6 +12,7 @@ services:
     volumes:
       - ./certs:/app/certs
       - ../webapps/packages/:/app/packages
+      - /webpack/cache
       - /app/node_modules
       - /app/packages/build/node_modules
       - /app/packages/design/node_modules
@@ -21,6 +22,7 @@ services:
     environment:
       WEBPACK_HTTPS_CERT: /app/certs/server.crt
       WEBPACK_HTTPS_KEY: /app/certs/server.key
+      WEBPACK_CACHE_DIRECTORY: /webpack/cache
 
   go.teleport:
     container_name: go.teleport
