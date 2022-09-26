@@ -1,0 +1,21 @@
+teleport:
+  nodename: node
+  data_dir: /var/lib/teleport
+  auth_token: node-token
+  auth_servers:
+    - go.teleport:3025
+
+auth_service:
+  enabled: no
+proxy_service:
+  enabled: no
+app_service:
+  enabled: no
+
+ssh_service:
+  enabled: "yes"
+  listen_addr: 0.0.0.0:3022
+  commands:
+  - name: hostname
+    command: [hostname]
+    period: 1m0s

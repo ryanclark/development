@@ -45,3 +45,15 @@ services:
       - ./teleport/.air.toml:/app/.air.toml
       - ./teleport/teleport.yaml:/etc/teleport.yaml
       - ../teleport/e/fixtures/license-all-features.pem:/etc/license.pem
+
+  node:
+    container_name: node
+    hostname: node
+    build:
+      dockerfile: development/teleport/Dockerfile
+      context: ..
+      target: static
+    volumes:
+      - /app/build
+      - ./data/node:/var/lib/teleport
+      - ./node/teleport.yaml:/etc/teleport.yaml
