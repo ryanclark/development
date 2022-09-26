@@ -1,3 +1,11 @@
+FROM alpine as cache-import
+
+RUN --mount=type=cache,target=/teleport-cache \
+    tar xf /cache.tar -C /cache/teleport > /dev/null 2>&1 || mkdir -p /cache/teleport
+
+RUN --mount=type=cache,target=/tctl-cache \
+    tar xf /cache.tar -C /cache/tctl > /dev/null 2>&1 || mkdir -p /cache/tctl
+
 FROM cosmtrek/air:latest as live-reload
 
 WORKDIR /app
@@ -25,7 +33,13 @@ COPY teleport/constants.go constants.go
 COPY teleport/metrics.go metrics.go
 COPY teleport/version.go version.go
 
-RUN go build -o build/tctl -ldflags '-w -s' ./e/tool/tctl
+COPY --from=cache-import /cache/tctl /root/.cache/go-build/
+
+ARG TOOL_FOLDER
+
+RUN ls -al /root/.cache/go-build/ && \
+    go build -o build/tctl -ldflags '-w -s' ./${TOOL_FOLDER}/tctl && \
+    ls -al /root/.cache/go-build/
 
 COPY development/certs/server.key /var/lib/teleport-certs/server.key
 COPY development/certs/server.crt /var/lib/teleport-certs/server.crt
@@ -34,8 +48,20 @@ RUN cp /var/lib/teleport-certs/server.crt /usr/local/share/ca-certificates/telep
 
 ENV DEBUG "1"
 
+RUN --mount=type=cache,target=/tctl-cache \
+    tar cf /cache.tar /root/.cache/go-build
+
 FROM live-reload as static
 
-RUN go build -o build/teleport -ldflags '-w -s' -tags "webassets_embed" ./e/tool/teleport
+COPY teleport/webassets webassets
+
+COPY --from=cache-import /cache/teleport /root/.cache/go-build/
+
+RUN ls -al /root/.cache/go-build/ && \
+    go build -o build/teleport -ldflags '-w -s' -tags 'webassets_embed' ./${TOOL_FOLDER}/teleport && \
+    ls -al /root/.cache/go-build/
+
+RUN --mount=type=cache,target=/teleport-cache \
+    tar cf /cache.tar /root/.cache/go-build
 
 ENTRYPOINT ["/app/build/teleport", "start", "-d"]

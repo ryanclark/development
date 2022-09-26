@@ -10,9 +10,9 @@ This uses caching for both Go and Webpack, so although the first initial run wil
 
 ## Setup
 
-This assumes you have your local directory structure setup something like (with the enterprise submodules initialised and updated for both `teleport` and `webapps`):
-
 ### Directory Setup
+
+This assumes you have your local directory structure setup something like:
 
 ```
 ~/go/src/github.com/gravitational
@@ -96,6 +96,8 @@ You should clone this directory so it's next to `teleport` and `webapps`.
 │   │ package.json
 ```
 
+You don't have to have the enterprise submodules cloned if you do not want to build the enterprise version.
+
 ### mkcert
 
 You'll need [mkcert](https://github.com/FiloSottile/mkcert), which is a quick and easy way to create local, trusted certificates.
@@ -155,6 +157,12 @@ make setup
 
 Which will create the initial admin user for you.
 
+### Building Enterprise
+
+To build the enterprise version of `tctl`, `teleport` and the frontend, create a file called `.e`. 
+
+You'll want to run `make build` instead of `make start` when swapping between enterprise and OSS.
+
 ### Commands
 
 #### Opening a shell
@@ -170,11 +178,15 @@ make frontend-shell
 
 As there's a few Docker volume overrides on the webapps `node_modules` (to avoid your local `node_modules` from being sync'd in, so the Linux built `node_modules` persist), if you run any `yarn` command locally you'll also need to run it inside the frontend container.
 
-To run the equivalent of `yarn install` inside the container, you can run:
+To run the equivalent of `yarn` inside the container, you can run:
 
 ```
-make yarn install
+make yarn
 ```
+
+When we build the Docker image, to be as fast as possible we run `yarn install --ignore-scripts`. This prevents all the Electron stuff being installed, which we don't need to build Teleport.
+
+By default, if you run `make yarn` with no arguments after, it'll append `--ignore-scripts` to avoid it failing (Python does not exist in the container, so `node-pty` doesn't build). If you run `make yarn install`, you should instead run `make yarn install --ignore-scripts`. `--ignore-scripts` can't be appended to every operation, as there are some `yarn` commands that do not allow for that flag to be set. 
 
 #### tctl
 
@@ -237,6 +249,14 @@ The `target` that's specified is now `static`, which will build `tctl`, skip pas
 You'll still need to create a folder for `<service-name>` with a `teleport.yaml` file like mentioned above.
 
 ### Other info
+
+#### Only running Teleport, not Webpack too
+
+You can go into "solo" mode, where Webpack isn't running alongside Teleport and instead you're just getting the webassets built into the Teleport binary.
+
+To do this, create a file called `.solo`. The presence of this file will result in `docker-compose.solo.yml` being the compose file (so all `make` targets will still work with the different file) and you'll be running Teleport without Webpack in front.
+
+When swapping between solo mode and normal, you just need to re-run `make start`. There's nothing that needs to be rebuilt.
 
 #### Config File
 

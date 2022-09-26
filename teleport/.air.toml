@@ -2,7 +2,6 @@ root = "."
 tmp_dir = "tmp"
 
 [build]
-cmd = "go build -o build/teleport -ldflags '-w -s' -tags \"webassets_embed\" ./e/tool/teleport"
 bin = "build/teleport"
 include_ext = ["go", "yaml"]
 exclude_dir = ["docs", "docker", "data", "assets", "operator", "proto", "rfd", "target", "vagrant", "examples", "webassets", "build", "build.assets"]

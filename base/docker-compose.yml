@@ -1,0 +1,66 @@
+services:
+  frontend:
+    container_name: frontend
+    build:
+      dockerfile: ../development/frontend/Dockerfile
+      context: ../../webapps
+      target: node-dependencies
+    working_dir: ${WEBPACK_CONFIG_DIRECTORY}
+    command: /app/packages/build/bin/g-start.js --config ${WEBPACK_CONFIG_DIRECTORY}/webpack.dev.config.js --target https://go.teleport:3080/web
+    ports:
+      - 443:8080
+    volumes:
+      - ../certs:/app/certs
+      - ../../webapps/packages/:/app/packages
+      - /webpack/cache2
+      - /app/node_modules
+      - /app/packages/build/node_modules
+      - /app/packages/design/node_modules
+      - /app/packages/shared/node_modules
+      - /app/packages/teleport/node_modules
+      - /app/packages/teleterm/node_modules
+    environment:
+      WEBPACK_HTTPS_CERT: /app/certs/server.crt
+      WEBPACK_HTTPS_KEY: /app/certs/server.key
+      WEBPACK_CACHE_DIRECTORY: /webpack/cache2
+
+  go.teleport:
+    container_name: go.teleport
+    hostname: go.teleport
+    build:
+      dockerfile: development/teleport/Dockerfile
+      context: ../..
+      target: live-reload
+      args:
+        TOOL_FOLDER: ${TOOL_FOLDER}
+    command:
+      - --build.cmd
+      - "go build -o build/teleport -ldflags '-w -s' -tags 'webassets_embed' ./${TOOL_FOLDER}/teleport"
+    ports:
+      - 3024:3024
+      - 3080:3080
+    volumes:
+      - ../../teleport:/app
+      - /app/build
+      - /go/pkg/mod
+      - /root/.cache/go-build
+      - .,/data/teleport:/var/lib/teleport
+      - ../teleport/.air.toml:/app/.air.toml
+      - ../teleport/teleport.yaml:/etc/teleport.yaml
+      - ${LICENSE_FILE}:/etc/license.pem
+    environment:
+      TELEPORT_UNSTABLE_VC_SYNC_ON_START: yes
+
+  node:
+    container_name: node
+    hostname: node
+    build:
+      dockerfile: development/teleport/Dockerfile
+      context: ../..
+      target: static
+      args:
+        TOOL_FOLDER: ${TOOL_FOLDER}
+    volumes:
+      - /app/build
+      - ../data/node:/var/lib/teleport
+      - ../node/teleport.yaml:/etc/teleport.yaml

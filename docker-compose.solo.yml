@@ -1,13 +1,10 @@
 services:
-  frontend:
-    extends:
-      file: base/docker-compose.yml
-      service: frontend
-
   go.teleport:
     extends:
       file: base/docker-compose.yml
       service: go.teleport
+    ports:
+      - 443:3080
 
   node:
     extends:
