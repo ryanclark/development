@@ -1,4 +1,4 @@
-FROM cosmtrek/air:latest as development
+FROM cosmtrek/air:latest as live-reload
 
 WORKDIR /app
 
@@ -33,3 +33,9 @@ COPY development/certs/server.crt /var/lib/teleport-certs/server.crt
 RUN cp /var/lib/teleport-certs/server.crt /usr/local/share/ca-certificates/teleport.crt && update-ca-certificates
 
 ENV DEBUG "1"
+
+FROM live-reload as static
+
+RUN go build -o build/teleport -ldflags '-w -s' -tags "webassets_embed" ./e/tool/teleport
+
+ENTRYPOINT ["/app/build/teleport", "start", "-d"]
