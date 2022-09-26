@@ -110,6 +110,14 @@ You should then trun
 mkcert -install
 ```
 
+Finally, to setup the certificates we need, run:
+
+```bash
+mkcert -cert-file certs/server.crt -key-file certs/server.key go.teleport "*.teleport"
+```
+
+### Docker
+
 You'll also need Docker running.
 
 For an Apple Silicon Mac, I've found that enabling the new virtualization framework and therefore enabling VirtioFS accelerated directory sharing has yielded a very fast environment.
