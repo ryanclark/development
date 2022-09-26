@@ -6,10 +6,11 @@ It sets up a single Teleport service that runs the Auth and Proxy services, as w
 
 File changes for the Teleport repo are sync'd and then [air](https://github.com/cosmtrek/air) watches for any changes to your local Teleport repo, and will rebuild and relaunch Teleport when you change a `.go` or `.yaml` file.
 
+This uses caching for both Go and Webpack, so although the first initial run will take a few minutes, subsequent runs of `make start` will build both Teleport and the frontend and have them up and running in <5s.
+
 ## Setup
 
 This assumes you have your local directory structure setup something like (with the enterprise submodules initialised and updated for both `teleport` and `webapps`):
-
 
 ### Directory Setup
 
@@ -182,6 +183,58 @@ make yarn install
 ```bash
 make tctl get users
 ```
+
+### Adding another Teleport service
+
+In the `docker-compose.yml`, you'll see there are two types of Teleport services running, and they're defined a little differently.
+
+#### Services that rebuild on code changes
+
+If you want to rebuild Teleport on every file change, you'll want to copy how the Auth Service (`go.teleport`) is setup, like this:
+
+```yaml
+  service-name:
+    container_name: service-name
+    build:
+      dockerfile: development/teleport/Dockerfile
+      context: ..
+      target: live-reload
+    volumes:
+      - ../teleport:/app
+      - /app/build
+      - /go/pkg/mod
+      - /root/.cache/go-build
+      - ./data/service-name:/var/lib/teleport
+      - ./teleport/.air.toml:/app/.air.toml
+      - ./service-name/teleport.yaml:/etc/teleport.yaml
+```
+
+And create a folder called `<service-name>` with a `teleport.yaml` inside, configured how you need it to be. You might find it useful to add a static token to `teleport/teleport.yaml`, so the Teleport service can instantly join the Auth Service.
+
+The key things in this config are the `target` being `live-reload` - this uses the `Dockerfile` up until it's built `tctl`, and then `air` will run which will build Teleport, start it, and rebuild it and restart it on file changes.
+
+#### Services that do not need to rebuild on code changes
+
+If you're only working the Auth Service code, it would be a bit annoying if you were running an SSH agent and that also kept rebuilding, even though you're not editing the code.
+
+To setup a service in this way, copy the configuration for the `node` service in `docker-compose.yml`.
+
+```yaml
+  service-name:
+    container_name: service-name
+    build:
+      dockerfile: development/teleport/Dockerfile
+      context: ..
+      target: static
+    volumes:
+      - /app/build
+      - ./data/service-name:/var/lib/teleport
+      - ./service-name/teleport.yaml:/etc/teleport.yaml
+```
+
+The `target` that's specified is now `static`, which will build `tctl`, skip past `air`, build `teleport` and the run `teleport start -d`. This means you now have a static instance which won't respond to code changes.
+
+You'll still need to create a folder for `<service-name>` with a `teleport.yaml` file like mentioned above.
 
 ### Other info
 
