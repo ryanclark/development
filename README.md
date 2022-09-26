@@ -156,6 +156,15 @@ Which will create the initial admin user for you.
 
 ### Commands
 
+#### Opening a shell
+
+You can open an interactive shell to either the frontend or Teleport via:
+
+```
+make teleport-shell
+make frontend-shell
+```
+
 #### yarn
 
 As there's a few Docker volume overrides on the webapps `node_modules` (to avoid your local `node_modules` from being sync'd in, so the Linux built `node_modules` persist), if you run any `yarn` command locally you'll also need to run it inside the frontend container.
