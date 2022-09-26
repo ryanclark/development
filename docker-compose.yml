@@ -25,8 +25,8 @@ services:
   go.teleport:
     container_name: go.teleport
     build:
-      dockerfile: ../development/teleport/Dockerfile
-      context: ../teleport
+      dockerfile: development/teleport/Dockerfile
+      context: ..
     ports:
       - 3024:3024
       - 3080:3080
