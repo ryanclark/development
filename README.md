@@ -113,7 +113,7 @@ mkcert -install
 Finally, to setup the certificates we need, run:
 
 ```bash
-mkcert -cert-file certs/server.crt -key-file certs/server.key go.teleport "*.teleport"
+make cert
 ```
 
 ### Docker

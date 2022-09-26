@@ -9,7 +9,7 @@ $(eval $(TCTL_ARGS):;@:)
 endif
 
 
-.PHONY: start build yarn tctl frontend-shell teleport-shell
+.PHONY: start build yarn tctl frontend-shell teleport-shell setup clean cert
 
 start:
 	docker compose up
@@ -35,3 +35,6 @@ setup:
 
 clean:
 	docker compose down -v --remove-orphans
+
+cert:
+	mkdir -p certs && mkcert -cert-file certs/server.crt -key-file certs/server.key go.teleport "*.teleport"
