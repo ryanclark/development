@@ -1,0 +1,5 @@
+certs/
+data/
+license.pem
+.fleet
+.idea

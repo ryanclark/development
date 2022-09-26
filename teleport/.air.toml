@@ -1,0 +1,26 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+cmd = "go build -o build/teleport -ldflags '-w -s' -tags \"webassets_embed\" ./e/tool/teleport"
+bin = "build/teleport"
+include_ext = ["go", "yaml"]
+exclude_dir = ["docs", "docker", "data", "assets", "operator", "proto", "rfd", "target", "vagrant", "examples", "webassets", "build", "build.assets"]
+exclude_unchanged = true
+follow_symlink = true
+stop_on_error = true
+send_interrupt = true
+kill_delay = 1000
+args_bin = ["start", "-d"]
+
+[log]
+time = false
+
+[color]
+main = "magenta"
+watcher = "cyan"
+build = "yellow"
+runner = "green"
+
+[misc]
+clean_on_exit = true

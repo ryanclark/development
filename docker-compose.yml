@@ -1,0 +1,43 @@
+services:
+  frontend:
+    container_name: frontend
+    build:
+      dockerfile: ../development/frontend/Dockerfile
+      context: ../webapps
+      target: node-dependencies
+    working_dir: /app/packages/teleport
+    command: /app/packages/build/bin/g-start.js --config /app/packages/webapps.e/teleport/webpack.dev.config.js --target https://go.teleport:3080/web
+    ports:
+      - 443:8080
+    volumes:
+      - ./certs:/app/certs
+      - ../webapps/packages/:/app/packages
+      - /app/node_modules
+      - /app/packages/build/node_modules
+      - /app/packages/design/node_modules
+      - /app/packages/shared/node_modules
+      - /app/packages/teleport/node_modules
+      - /app/packages/teleterm/node_modules
+    environment:
+      WEBPACK_HTTPS_CERT: /app/certs/server.crt
+      WEBPACK_HTTPS_KEY: /app/certs/server.key
+
+  go.teleport:
+    container_name: go.teleport
+    build:
+      dockerfile: ../development/teleport/Dockerfile
+      context: ../teleport
+    ports:
+      - 3024:3024
+      - 3080:3080
+    environment:
+      TELEPORT_UNSTABLE_VC_SYNC_ON_START: yes
+    volumes:
+      - ../teleport:/app
+      - /app/build
+      - /go/pkg/mod
+      - /root/.cache/go-build
+      - ./data/teleport:/var/lib/teleport
+      - ./teleport/.air.toml:/app/.air.toml
+      - ./teleport/teleport.yaml:/etc/teleport.yaml
+      - ../teleport/e/fixtures/license-all-features.pem:/etc/license.pem
