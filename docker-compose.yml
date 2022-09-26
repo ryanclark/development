@@ -26,9 +26,11 @@ services:
 
   go.teleport:
     container_name: go.teleport
+    hostname: go.teleport
     build:
       dockerfile: development/teleport/Dockerfile
       context: ..
+      target: live-reload
     ports:
       - 3024:3024
       - 3080:3080
