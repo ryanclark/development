@@ -22,9 +22,9 @@ ssh_service:
   enabled: "yes"
   listen_addr: 0.0.0.0:3022
   commands:
-  - name: hostname
-    command: [hostname]
-    period: 1m0s
+    - name: hostname
+      command: [ hostname ]
+      period: 1m0s
 
 proxy_service:
   enabled: "yes"
@@ -35,7 +35,7 @@ proxy_service:
   https_keypairs:
     - key_file: /var/lib/teleport-certs/server.key
       cert_file: /var/lib/teleport-certs/server.crt
-  acme: {}
+  acme: { }
 
 app_service:
   enabled: no
