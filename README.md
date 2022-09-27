@@ -162,6 +162,12 @@ you've already ran the command before and have stopped running Teleport since.
 
 The containers will run in detached mode, so you won't have any logs immediately available to you in the console.
 
+If you wish to have all the logs visible to you in one go, you can run this instead:
+
+```bash
+make start-attach
+```
+
 The Teleport container has `tctl` built as part of the build process. This speeds up the build of Teleport by air when
 the container launches (as most of the Go packages have been downloaded and there's a populated Go cache), as well as
 provides `tctl` to be able to create the initial first user.
