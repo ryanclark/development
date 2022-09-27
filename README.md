@@ -8,6 +8,8 @@ File changes for the Teleport repo are sync'd and then [air](https://github.com/
 
 This uses caching for both Go and Webpack, so although the first initial run will take a few minutes, subsequent runs of `make start` will build both Teleport and the frontend and have them up and running in <5s.
 
+This should work on all backend versions of Teleport, and webapps from v10 onwards.
+
 ## Setup
 
 ### Directory Setup
@@ -182,6 +184,20 @@ To stop the running Docker contains, run:
 ```bash
 make stop
 ```
+
+### Swapping between Teleport versions
+
+As this lives next to your `teleport` and `webapps` directories, you can just checkout whatever branch you need to work on in either repo.
+
+#### teleport
+
+When changing the major version of `teleport`, you should re-run `make build`. This is because `tctl` is built to live inside the container, as is `teleport` if you're using static services that don't live reload. 
+
+`tctl` and `teleport` change quite a bit between major versions, so a rebuild ensures these binaries are on the same major version that the live reloading services are on.
+
+#### webapps
+
+When changing the major version of `webapps`, you should make sure you run `yarn` inside `webapps` before re-running `make start`. There shouldn't be any need to run `make build`.
 
 ### Building Enterprise
 
