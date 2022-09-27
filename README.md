@@ -147,6 +147,8 @@ make start
 
 This will build the Docker containers if it's your first time running the command, and just start Teleport quickly if you've already ran the command before and have stopped running Teleport since.
 
+The containers will run in detached mode, so you won't have any logs immediately available to you in the console.
+
 The Teleport container has `tctl` built as part of the build process. This speeds up the build of Teleport by air when the container launches (as most of the Go packages have been downloaded and there's a populated Go cache), as well as provides `tctl` to be able to create the initial first user.
 
 Once Teleport has finished initializing, you can run:
@@ -157,11 +159,41 @@ make setup
 
 Which will create the initial admin user for you.
 
+### Logs
+
+To get and follow the logs from the frontend or the logs from Teleport, you can run
+
+```bash
+make frontend-logs
+make teleport-logs
+```
+
+To get any other logs you can run
+
+```bash
+make logs servicename # or
+make logs -- -f servicename # -- is needed when passing in flags (such as -f for follow)
+```
+
+### Stopping
+
+To stop the running Docker contains, run:
+
+```bash
+make stop
+```
+
 ### Building Enterprise
 
 To build the enterprise version of `tctl`, `teleport` and the frontend, create a file called `.e`. 
 
-You'll want to run `make build` instead of `make start` when swapping between enterprise and OSS.
+You'll want to run `make build` first before re-running `make start` when swapping between enterprise and OSS.
+
+> You can choose not to run a build to just swap the frontend between OSS and Enterprise, but a rebuild is needed for the `tctl` and `teleport` binaries inside the containers.
+> 
+> If you're using live-reload defined services, you may not need to rebuild as the presence of the `.e` file tells air to build either the OSS or Enterprise. The `tctl` binary in the container will still be incorrect, however.
+> 
+> If you're using static defined services, you will need to rebuild.
 
 ### Commands
 
@@ -173,20 +205,6 @@ You can open an interactive shell to either the frontend or Teleport via:
 make teleport-shell
 make frontend-shell
 ```
-
-#### yarn
-
-As there's a few Docker volume overrides on the webapps `node_modules` (to avoid your local `node_modules` from being sync'd in, so the Linux built `node_modules` persist), if you run any `yarn` command locally you'll also need to run it inside the frontend container.
-
-To run the equivalent of `yarn` inside the container, you can run:
-
-```
-make yarn
-```
-
-When we build the Docker image, to be as fast as possible we run `yarn install --ignore-scripts`. This prevents all the Electron stuff being installed, which we don't need to build Teleport.
-
-By default, if you run `make yarn` with no arguments after, it'll append `--ignore-scripts` to avoid it failing (Python does not exist in the container, so `node-pty` doesn't build). If you run `make yarn install`, you should instead run `make yarn install --ignore-scripts`. `--ignore-scripts` can't be appended to every operation, as there are some `yarn` commands that do not allow for that flag to be set. 
 
 #### tctl
 
@@ -276,6 +294,8 @@ If you need to rebuild `tctl` or rebuild the Docker images for whatever reason, 
 make build
 ```
 
+You'll then need to re-run `make start`.
+
 To completely wipe your workspace, run:
 
 ```bash
@@ -283,3 +303,32 @@ make clean
 ```
 
 Which will remove all containers and volumes created by Docker.
+
+#### Make commands reference
+
+You can also run `make help` to get a list of the available Make targets. 
+
+**Controlling container lifecycle**
+
+- `make start` - starts (and builds, if not present) the Docker containers in detached mode
+- `make start-attach` - starts (and builds, if not present) the Docker containers and attaches to the output of them
+- `make stop` - stops all containers
+
+**Building & cleaning**
+
+- `make build` - builds/rebuilds the Docker images
+- `make clean` - removes all Docker containers and volumes
+- `make down` - removes all Docker containers
+
+**Setup**
+- `make cert` - creates the self-signed certificate for `go.teleport` and `*.teleport` with `mkcert`
+- `make setup` - sets up the default admin user via an alias to `make tctl users add admin --roles=editor,access --logins=root,ubuntu,ec2-user`
+
+**Commands**
+
+- `make frontend-logs` - alias for `make logs -- -f frontend`
+- `make frontend-shell` - open an interactive shell inside the frontend container
+- `make logs <command>` - runs `docker compose logs <command>`
+- `make tctl <command>` - runs `tctl` inside the Teleport container
+- `make teleport-logs` - alias for `make logs -- -f go.teleport`
+- `make teleport-shell` - open an interactive shell inside the Teleport container
