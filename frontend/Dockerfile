@@ -1,4 +1,4 @@
-FROM node:16.17-slim as node-dependencies
+FROM node:16.17-slim as configs
 
 WORKDIR /app
 
@@ -15,6 +15,8 @@ COPY packages/teleterm/package.json /app/packages/teleterm/
 
 # copy enterprise package.json files if present
 COPY README.md packages/webapps.e/telepor[t]/package.json /app/packages/webapps.e/teleport/
+
+FROM configs as node-dependencies
 
 # download and install npm dependencies
 ARG YARN_FROZEN_LOCKFILE

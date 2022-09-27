@@ -19,6 +19,7 @@ COPY teleport/api/go.sum api/go.sum
 COPY teleport/api api
 COPY teleport/lib lib
 COPY teleport/tool tool
+
 COPY teleport/e e
 
 COPY teleport/constants.go constants.go
@@ -27,7 +28,8 @@ COPY teleport/version.go version.go
 
 ARG TOOL_FOLDER
 
-RUN --mount=type=cache,target=/root/.cache/go-build \
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
     go build -o build/tctl -ldflags '-w -s' ./${TOOL_FOLDER}/tctl
 
 COPY development/certs/server.key /var/lib/teleport-certs/server.key
@@ -44,7 +46,8 @@ FROM live-reload as static
 
 COPY teleport/webassets webassets
 
-RUN --mount=type=cache,target=/root/.cache/go-build \
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
     go build -o build/teleport -ldflags '-w -s' -tags 'webassets_embed' ./${TOOL_FOLDER}/teleport
 
 ENTRYPOINT ["/app/build/teleport", "start", "-d"]
