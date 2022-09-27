@@ -114,7 +114,7 @@ If you're on macOS, you can install `mkcert` via
 brew install mkcert
 ```
 
-You should then trun
+You should then run
 
 ```bash
 mkcert -install
