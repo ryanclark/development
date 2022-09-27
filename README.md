@@ -266,7 +266,7 @@ If you need to change the config that requires a restart of Teleport, just stop 
 
 #### Teleport License
 
-This builds the Enterprise version of both Teleport and Webapps. It pulls in the enterprise license will full features by default, but if you wish to change it to any of the [other license types](https://github.com/gravitational/teleport.e/tree/master/fixtures), you can just change the file name that's mounted in `docker-compose.yml`.
+When enterprise is enabled, this builds the Enterprise version of both Teleport and Webapps. It pulls in the enterprise license will full features by default, but if you wish to change it to any of the [other license types](https://github.com/gravitational/teleport.e/tree/master/fixtures), you can just change the file name that's mounted in `docker-compose.yml`.
 
 #### Rebuilding the Docker image
 
