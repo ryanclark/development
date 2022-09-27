@@ -13,12 +13,12 @@ services:
       - ../../webapps/node_modules/:/app/node_modules:ro,delegated
       - ../../webapps/packages/:/app/packages
       - ../certs:/app/certs:ro
-      - ../data/cache/frontend:/webpack/cache2:rw,delegated
+      - ../data/cache/frontend:/webpack/cache:rw,delegated
     environment:
       NODE_OPTIONS: --max-old-space-size=8192
       WEBPACK_HTTPS_CERT: /app/certs/server.crt
       WEBPACK_HTTPS_KEY: /app/certs/server.key
-      WEBPACK_CACHE_DIRECTORY: /webpack/cache2
+      WEBPACK_CACHE_DIRECTORY: /webpack/cache
 
   go.teleport:
     container_name: go.teleport
