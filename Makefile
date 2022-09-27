@@ -30,11 +30,10 @@ endif
 .PHONY: start build yarn tctl frontend-shell teleport-shell setup clean cert
 
 start:
-	echo $(wildcard .solo)
 	docker compose up --remove-orphans
 
 build:
-	docker compose up --build
+	docker compose up --build --remove-orphans
 
 yarn:
 	docker compose exec frontend yarn $(YARN_ARGS)
