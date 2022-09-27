@@ -246,10 +246,10 @@ If you want to rebuild Teleport on every file change, you'll want to copy how th
       context: ..
       target: live-reload
     volumes:
-      - ../teleport:/app
+      - ../teleport:/app/:rw,delegated
       - /app/build
-      - /go/pkg/mod
-      - /root/.cache/go-build
+      - ./data/cache/service-name/go-pkg:/go/pkg/mod:rw,delegated
+      - ./data/cache/service-name/go:/root/.cache/go-build,delegated
       - ./data/service-name:/var/lib/teleport
       - ./teleport/.air.toml:/app/.air.toml
       - ./service-name/teleport.yaml:/etc/teleport.yaml
