@@ -269,7 +269,7 @@ like this:
   service-name:
     container_name: service-name
     build:
-      dockerfile: development/teleport/Dockerfile
+      dockerfile: development/build/Dockerfile
       context: ..
       target: live-reload
     volumes:
@@ -277,7 +277,7 @@ like this:
       - ./data/cache/service-name/go-pkg:/go/pkg/mod:rw,delegated
       - ./data/cache/service-name/go:/root/.cache/go-build,delegated
       - ./data/service-name:/var/lib/teleport
-      - ./teleport/.air.toml:/app/.air.toml
+      - ./build/.air.toml:/app/.air.toml
       - ./service-name/teleport.yaml:/etc/teleport.yaml
 ```
 
@@ -300,7 +300,7 @@ To setup a service in this way, copy the configuration for the `node` service in
   service-name:
     container_name: service-name
     build:
-      dockerfile: development/teleport/Dockerfile
+      dockerfile: development/build/Dockerfile
       context: ..
       target: static
     volumes:
