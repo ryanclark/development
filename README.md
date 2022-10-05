@@ -274,7 +274,6 @@ like this:
       target: live-reload
     volumes:
       - ../teleport:/app/:rw,delegated
-      - /app/build
       - ./data/cache/service-name/go-pkg:/go/pkg/mod:rw,delegated
       - ./data/cache/service-name/go:/root/.cache/go-build,delegated
       - ./data/service-name:/var/lib/teleport
@@ -305,7 +304,6 @@ To setup a service in this way, copy the configuration for the `node` service in
       context: ..
       target: static
     volumes:
-      - /app/build
       - ./data/service-name:/var/lib/teleport
       - ./service-name/teleport.yaml:/etc/teleport.yaml
 ```

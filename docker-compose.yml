@@ -13,3 +13,6 @@ services:
     extends:
       file: base/docker-compose.yml
       service: node
+
+networks:
+  teleport:

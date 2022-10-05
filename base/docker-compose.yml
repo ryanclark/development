@@ -6,7 +6,9 @@ services:
       context: ../../webapps
       target: configs
     working_dir: ${WEBPACK_CONFIG_DIRECTORY}
-    command: node /app/packages/build/devserver/index.js --config ${WEBPACK_CONFIG_DIRECTORY}/webpack.dev.config.js --target https://go.teleport:3080/web
+    command: node /app/packages/build/devserver/index.js --config ${WEBPACK_CONFIG_DIRECTORY}/webpack.dev.config.js --target https://go.teleport/web
+    networks:
+      - teleport
     ports:
       - 443:8080
     volumes:
@@ -20,11 +22,26 @@ services:
       WEBPACK_HTTPS_KEY: /app/certs/server.key
       WEBPACK_CACHE_DIRECTORY: /webpack/cache
 
+  node:
+    container_name: node
+    hostname: node
+    build:
+      dockerfile: development/build/Dockerfile
+      context: ../..
+      target: static
+      args:
+        TOOL_FOLDER: ${TOOL_FOLDER}
+    networks:
+      - teleport
+    volumes:
+      - ../data/node:/var/lib/teleport
+      - ../node/teleport.yaml:/etc/teleport.yaml
+
   go.teleport:
     container_name: go.teleport
     hostname: go.teleport
     build:
-      dockerfile: development/teleport/Dockerfile
+      dockerfile: development/build/Dockerfile
       context: ../..
       target: live-reload
       args:
@@ -32,31 +49,24 @@ services:
     command:
       - --build.cmd
       - "go build -o build/teleport -ldflags '-w -s' -tags 'webassets_embed' ./${TOOL_FOLDER}/teleport"
+    networks:
+      teleport:
+        aliases:
+          - go.teleport
+          - dumper.go.teleport
     ports:
-      - 3024:3024
-      - 3080:3080
+      - 3080:443
+      - 3025:3025
     volumes:
       - ../../teleport:/app/:rw,delegated
-      - /app/build
       - ../data/cache/go-pkg:/go/pkg/mod:rw,delegated
       - ../data/cache/go:/root/.cache/go-build,delegated
       - ../data/teleport:/var/lib/teleport
-      - ../teleport/.air.toml:/app/.air.toml
-      - ../teleport/teleport.yaml:/etc/teleport.yaml
+      - ../build/.air.toml:/app/.air.toml
+      - ../auth/teleport.yaml:/etc/teleport.yaml
       - ${LICENSE_FILE}:/etc/license.pem
     environment:
       TELEPORT_UNSTABLE_VC_SYNC_ON_START: yes
 
-  node:
-    container_name: node
-    hostname: node
-    build:
-      dockerfile: development/teleport/Dockerfile
-      context: ../..
-      target: static
-      args:
-        TOOL_FOLDER: ${TOOL_FOLDER}
-    volumes:
-      - /app/build
-      - ../data/node:/var/lib/teleport
-      - ../node/teleport.yaml:/etc/teleport.yaml
+networks:
+  teleport:

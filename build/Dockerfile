@@ -44,6 +44,15 @@ RUN --mount=type=cache,target=/tctl-cache \
 
 FROM live-reload as static
 
+COPY teleport/api api
+COPY teleport/lib lib
+COPY teleport/tool tool
+
+COPY teleport/e e
+
+COPY teleport/constants.go constants.go
+COPY teleport/metrics.go metrics.go
+COPY teleport/version.go version.go
 COPY teleport/webassets webassets
 
 RUN --mount=type=cache,target=/go/pkg/mod \
