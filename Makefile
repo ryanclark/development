@@ -41,7 +41,7 @@ build:
 
 ## Removes all Docker containers and volumes
 clean:
-	docker compose down -v --remove-orphans
+	docker compose down -v --remove-orphans --rmi all
 
 ## Removes all the containers
 down:

@@ -1,41 +1,40 @@
+version: v3
 teleport:
   nodename: teleport
   data_dir: /var/lib/teleport
 
 auth_service:
-  enabled: "yes"
+  enabled: yes
   listen_addr: 0.0.0.0:3025
   cluster_name: teleport
   proxy_listener_mode: multiplex
   license_file: /etc/license.pem
-  session_recording: "node"
+  session_recording: node
   tokens:
     - "node:node-token"
+    - "app,node:app-token"
+    - "proxy,node:proxy-token"
   authentication:
     type: local
     second_factor: on
     webauthn:
-      rp_id: "go.teleport"
+      rp_id: go.teleport
     connector_name: passwordless
 
-ssh_service:
-  enabled: "yes"
-  listen_addr: 0.0.0.0:3022
-  commands:
-    - name: hostname
-      command: [ hostname ]
-      period: 1m0s
+app_service:
+  enabled: yes
+  debug_app: true
 
 proxy_service:
   enabled: "yes"
   listen_addr: 0.0.0.0:3023
   tunnel_listen_addr: 0.0.0.0:3024
-  web_listen_addr: 0.0.0.0:3080
+  web_listen_addr: 0.0.0.0:443
   public_addr: go.teleport:443
   https_keypairs:
     - key_file: /var/lib/teleport-certs/server.key
       cert_file: /var/lib/teleport-certs/server.crt
-  acme: { }
+  acme: {}
 
-app_service:
+ssh_service:
   enabled: no
