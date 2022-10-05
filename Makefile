@@ -53,7 +53,7 @@ down:
 
 ## Creates a local self signed certificate % for `go.teleport` and `*.teleport` via `mkcert`
 cert:
-	mkdir -p certs && mkcert -cert-file certs/server.crt -key-file certs/server.key go.teleport "*.teleport"
+	mkdir -p certs && mkcert -cert-file certs/server.crt -key-file certs/server.key go.teleport "*.teleport" "*.go.teleport"
 
 ## Creates the initial admin user % alias for `make tctl users add admin --roles=editor,access --logins=root,ubuntu,ec2-user`
 setup: TCTL_ARGS="users add admin --roles=editor,access --logins=root,ubuntu,ec2-user"
