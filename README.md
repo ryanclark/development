@@ -175,11 +175,15 @@ will give you a CLI tool to view and manage all the Docker containers that are a
 brew install jesseduffield/lazydocker/lazydocker
 ```
 
-![lazydocker](images/lazydocker.png)
+![lazydocker logs](images/lazydocker-logs.png)
+
+![lazydocker stats](images/lazydocker-stats.png)
 
 Or, if you prefer a GUI, [DockStation](https://dockstation.io/) for Mac is also good.
 
-![DockStation](images/dockstation.png)
+![DockStation logs](images/dockstation-logs.png)
+
+![DockStation stats](images/dockstation-stats.png)
 
 If you wish to have all the logs visible to you in one go, you can run this instead:
 
