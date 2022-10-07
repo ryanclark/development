@@ -88,7 +88,7 @@ $(eval $(TCTL_ARGS):;@:)
 endif
 ## Runs `tctl <command>` inside the Teleport container
 tctl:
-	docker compose exec auth /app/build/tctl $(TCTL_ARGS)
+	docker compose exec go.teleport /app/build/tctl $(TCTL_ARGS)
 
 ## Shows and follows the logs from the Teleport container % alias for `make logs -- -f go.teleport`
 teleport-logs: LOGS_ARGS="-f go.teleport"
