@@ -185,11 +185,13 @@ Or, if you prefer a GUI, [DockStation](https://dockstation.io/) for Mac is also 
 
 ![DockStation stats](images/dockstation-stats.png)
 
-If you wish to have all the logs visible to you in one go, you can run this instead:
+If you wish to have all the logs visible to you in one go and attach your current terminal to Docker compose, you can run this instead:
 
 ```bash
 make start-attach
 ```
+
+Stopping this command will stop the development environment.
 
 The Teleport container has `tctl` built as part of the build process. This speeds up the build of Teleport by air when
 the container launches (as most of the Go packages have been downloaded and there's a populated Go cache), as well as
