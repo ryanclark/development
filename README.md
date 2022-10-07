@@ -168,6 +168,19 @@ you've already ran the command before and have stopped running Teleport since.
 
 The containers will run in detached mode, so you won't have any logs immediately available to you in the console.
 
+You might find it useful to download a tool such as [lazydocker](https://github.com/jesseduffield/lazydocker) which
+will give you a CLI tool to view and manage all the Docker containers that are all running.
+
+```bash
+brew install jesseduffield/lazydocker/lazydocker
+```
+
+![lazydocker](images/lazydocker.png)
+
+Or, if you prefer a GUI, [DockStation](https://dockstation.io/) for Mac is also good.
+
+![DockStation](images/dockstation.png)
+
 If you wish to have all the logs visible to you in one go, you can run this instead:
 
 ```bash
