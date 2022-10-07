@@ -63,7 +63,7 @@ services:
       - ../data/cache/go:/root/.cache/go-build,delegated
       - ../data/teleport:/var/lib/teleport
       - ../build/.air.toml:/app/.air.toml
-      - ../auth/teleport.yaml:/etc/teleport.yaml
+      - ../teleport/teleport.yaml:/etc/teleport.yaml
       - ${LICENSE_FILE}:/etc/license.pem
     environment:
       TELEPORT_UNSTABLE_VC_SYNC_ON_START: yes
