@@ -16,6 +16,8 @@ This should work on all backend versions of Teleport, and webapps from v10 onwar
 
 ![make help](images/make-help.png)
 
+![Teleport](images/teleport.png)
+
 ## Setup
 
 ### Directory Setup
