@@ -3,7 +3,7 @@
 This helps you run a local Teleport environment locally at https://go.teleport, with trusted local certificates.
 
 It sets up a single Teleport service that runs the Auth and Proxy services, as well as a container to run Webpack so you
-can build both Teleport and the Web code at the same time.
+can build both Teleport and the Web code at the same time. It also runs Application Access with the debug dumper app.
 
 File changes for the Teleport repo are sync'd and then [air](https://github.com/cosmtrek/air) watches for any changes to
 your local Teleport repo, and will rebuild and relaunch Teleport when you change a `.go` or `.yaml` file.
@@ -142,6 +142,7 @@ If you aren't, you can `sudo vim /etc/hosts` and add:
 
 ```
 0.0.0.0 go.teleport
+0.0.0.0 dumper.go.teleport
 ```
 
 If you wish to use a domain other than `go.teleport`, do a search and replace of any instance of `go.teleport` with the
