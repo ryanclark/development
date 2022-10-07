@@ -14,7 +14,7 @@ of `make start` will build both Teleport and the frontend and have them up and r
 
 This should work on all backend versions of Teleport, and webapps from v10 onwards.
 
-![make help](images/make-help.png)
+![make help](images/help.png)
 
 ![Teleport](images/teleport.png)
 
