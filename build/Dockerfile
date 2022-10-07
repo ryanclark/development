@@ -22,9 +22,7 @@ COPY teleport/tool tool
 
 COPY teleport/e e
 
-COPY teleport/constants.go constants.go
-COPY teleport/metrics.go metrics.go
-COPY teleport/version.go version.go
+COPY teleport/*.go .
 
 ARG TOOL_FOLDER
 
@@ -50,9 +48,8 @@ COPY teleport/tool tool
 
 COPY teleport/e e
 
-COPY teleport/constants.go constants.go
-COPY teleport/metrics.go metrics.go
-COPY teleport/version.go version.go
+COPY teleport/*.go .
+
 COPY teleport/webassets webassets
 
 RUN --mount=type=cache,target=/go/pkg/mod \
