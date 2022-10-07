@@ -134,6 +134,10 @@ You'll also need Docker running.
 For an Apple Silicon Mac, I've found that enabling the new virtualization framework and therefore enabling VirtioFS
 accelerated directory sharing has yielded a very fast environment.
 
+You should increase your Docker resource limits. Give it as much as you can spare, for the fastest performance building
+and running Teleport locally. The CPUs should be maybe n-1 or n-2 of your total available. Memory can probably be
+between 50-75% of what your machine has.
+
 ### DNS resolution
 
 You'll need `go.teleport` to resolve to `0.0.0.0`. If you're using a service like NextDNS, it's easy to do this in their
