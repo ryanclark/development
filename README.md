@@ -259,6 +259,24 @@ make tctl get users
 
 ### Adding another Teleport service
 
+The quickest way to add another Teleport node is to extend `node` from `base/docker-compose.yml`. You just need to
+create a new folder for the node (e.g. `node2`) with a `teleport.yaml` file inside - you can copy the existing one
+from `node/teleport.yml` and adjust `teleport.nodename`.
+
+Then, in `docker-compose.yml`, add something like
+
+```yaml
+  node2:
+    container_name: node2 # for the sake of not having it named `development-node2-1`
+    hostname: node2 # set the hostname to node2 also
+    extends:
+      file: base/docker-compose.yml
+      service: node
+    volumes:
+      - ./data/node2:/var/lib/teleport
+      - ./node/teleport.yaml:/etc/teleport.yaml
+```
+
 In the `docker-compose.yml`, you'll see there are two types of Teleport services running, and they're defined a little
 differently.
 

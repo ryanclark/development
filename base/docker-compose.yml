@@ -23,8 +23,6 @@ services:
       WEBPACK_CACHE_DIRECTORY: /webpack/cache
 
   node:
-    container_name: node
-    hostname: node
     build:
       dockerfile: development/build/Dockerfile
       context: ../..
@@ -33,9 +31,6 @@ services:
         TOOL_FOLDER: ${TOOL_FOLDER}
     networks:
       - teleport
-    volumes:
-      - ../data/node:/var/lib/teleport
-      - ../node/teleport.yaml:/etc/teleport.yaml
 
   go.teleport:
     container_name: go.teleport
