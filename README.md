@@ -1,6 +1,7 @@
 # Teleport Development Environment
 
-This helps you run a local Teleport environment locally at https://go.teleport, with trusted local certificates.
+This helps you run a local Teleport environment locally at https://go.teleport, with trusted local certificates. (no
+`--insecure` anywhere.)
 
 It sets up a single Teleport service that runs the Auth and Proxy services, as well as a container to run Webpack so you
 can build both Teleport and the Web code at the same time. It also runs Application Access with the debug dumper app.
