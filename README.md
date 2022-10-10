@@ -301,7 +301,7 @@ Then, in `docker-compose.yml`, add something like
       service: node
     volumes:
       - ./data/node2:/var/lib/teleport
-      - ./node/teleport.yaml:/etc/teleport.yaml
+      - ./node2/teleport.yaml:/etc/teleport.yaml
 ```
 
 In the `docker-compose.yml`, you'll see there are two types of Teleport services running, and they're defined a little
