@@ -99,13 +99,10 @@ teleport-logs:
 teleport-shell:
 	docker compose exec -it go.teleport /bin/bash
 
-GREEN  := $(shell tput -Txterm setaf 2)
-YELLOW := $(shell tput -Txterm setaf 3)
-WHITE  := $(shell tput -Txterm setaf 7)
-PURPLE  := $(shell tput -Txterm setaf 5)
-RESET  := $(shell tput -Txterm sgr0)
+## -- 🔧 Misc --
 
 .PHONY: help
+## Shows this help menu
 help:
 	@echo "🚀 \033[94mTeleport Development Environment\033[39m"
 	@echo ''
