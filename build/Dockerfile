@@ -54,6 +54,6 @@ COPY teleport/webassets webassets
 
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
-    go build -o build/teleport -ldflags '-w -s' -tags 'webassets_embed' ./${TOOL_FOLDER}/teleport
+    go build -o bin/teleport -ldflags '-w -s' -tags 'webassets_embed' ./${TOOL_FOLDER}/teleport
 
-ENTRYPOINT ["/app/build/teleport", "start", "-d"]
+ENTRYPOINT ["/app/bin/teleport", "start", "-d"]

@@ -43,7 +43,7 @@ services:
         TOOL_FOLDER: ${TOOL_FOLDER}
     command:
       - --build.cmd
-      - "go build -o build/teleport -ldflags '-w -s' -tags 'webassets_embed' ./${TOOL_FOLDER}/teleport"
+      - "go build -o bin/teleport -ldflags '-w -s' -tags 'webassets_embed' ./${TOOL_FOLDER}/teleport"
     networks:
       teleport:
         aliases:
