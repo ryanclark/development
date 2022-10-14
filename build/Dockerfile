@@ -1,14 +1,19 @@
-FROM cosmtrek/air:latest as live-reload
-
-WORKDIR /app
-
-RUN apt update && apt install tree gcc -y
+FROM golang:1.19 as build
 
 ENV GOPATH "/go"
 ENV GOROOT "/usr/local/go"
 ENV GOOS "linux"
 ENV CGO_ENABLED 1
 ENV GOARCH "arm64"
+
+WORKDIR /app
+
+RUN apt update && apt install tree gcc -y
+
+COPY development/certs/server.key /var/lib/teleport-certs/server.key
+COPY development/certs/server.crt /var/lib/teleport-certs/server.crt
+
+RUN cp /var/lib/teleport-certs/server.crt /usr/local/share/ca-certificates/teleport.crt && update-ca-certificates
 
 COPY teleport/go.mod go.mod
 COPY teleport/go.sum go.sum
@@ -28,19 +33,17 @@ ARG TOOL_FOLDER
 
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
-    go build -o build/tctl -ldflags '-w -s' ./${TOOL_FOLDER}/tctl
-
-COPY development/certs/server.key /var/lib/teleport-certs/server.key
-COPY development/certs/server.crt /var/lib/teleport-certs/server.crt
-
-RUN cp /var/lib/teleport-certs/server.crt /usr/local/share/ca-certificates/teleport.crt && update-ca-certificates
+    go build -o bin/tctl -ldflags '-w -s' ./${TOOL_FOLDER}/tctl
 
 ENV DEBUG "1"
 
-RUN --mount=type=cache,target=/tctl-cache \
-    tar cf /cache.tar /root/.cache/go-build
+FROM build as live-reload
 
-FROM live-reload as static
+RUN go install github.com/cosmtrek/air@latest
+
+ENTRYPOINT ["/go/bin/air"]
+
+FROM build as static
 
 COPY teleport/api api
 COPY teleport/lib lib
