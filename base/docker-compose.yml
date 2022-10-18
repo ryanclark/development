@@ -43,7 +43,7 @@ services:
         TOOL_FOLDER: ${TOOL_FOLDER}
     command:
       - --build.cmd
-      - "go build -o bin/teleport -ldflags '-w -s' -tags 'webassets_embed' ./${TOOL_FOLDER}/teleport"
+      - "go build -o tmp/teleport -ldflags '-w -s' -tags 'webassets_embed' ./${TOOL_FOLDER}/teleport"
     networks:
       teleport:
         aliases:
@@ -54,6 +54,7 @@ services:
       - 3025:3025
     volumes:
       - ../../teleport:/app/:rw,delegated
+      - /app/tmp
       - ../data/cache/go-pkg:/go/pkg/mod:rw,delegated
       - ../data/cache/go:/root/.cache/go-build,delegated
       - ../data/teleport:/var/lib/teleport

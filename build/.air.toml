@@ -2,7 +2,7 @@ root = "."
 tmp_dir = "tmp"
 
 [build]
-bin = "bin/teleport"
+bin = "tmp/teleport"
 include_ext = ["go", "yaml"]
 exclude_dir = ["docs", "docker", "data", "assets", "operator", "proto", "rfd", "target", "vagrant", "examples", "webassets", "build", "build.assets"]
 exclude_unchanged = true

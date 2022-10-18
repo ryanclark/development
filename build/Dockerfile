@@ -1,12 +1,12 @@
-FROM golang:1.19 as build
+FROM golang:1.19 as base
+
+WORKDIR /app
 
 ENV GOPATH "/go"
 ENV GOROOT "/usr/local/go"
 ENV GOOS "linux"
 ENV CGO_ENABLED 1
 ENV GOARCH "arm64"
-
-WORKDIR /app
 
 RUN apt update && apt install tree gcc -y
 
@@ -21,6 +21,10 @@ COPY teleport/go.sum go.sum
 COPY teleport/api/go.mod api/go.mod
 COPY teleport/api/go.sum api/go.sum
 
+ARG TOOL_FOLDER
+
+FROM base as tctl
+
 COPY teleport/api api
 COPY teleport/lib lib
 COPY teleport/tool tool
@@ -29,21 +33,21 @@ COPY teleport/e e
 
 COPY teleport/*.go .
 
-ARG TOOL_FOLDER
-
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
-    go build -o bin/tctl -ldflags '-w -s' ./${TOOL_FOLDER}/tctl
+    go build -o /bin/tctl -ldflags '-w -s' ./${TOOL_FOLDER}/tctl
 
-ENV DEBUG "1"
-
-FROM build as live-reload
+FROM base as live-reload
 
 RUN go install github.com/cosmtrek/air@latest
 
+COPY --from=tctl /bin/tctl /bin/tctl
+
+ENV DEBUG "1"
+
 ENTRYPOINT ["/go/bin/air"]
 
-FROM build as static
+FROM base as teleport
 
 COPY teleport/api api
 COPY teleport/lib lib
@@ -57,6 +61,13 @@ COPY teleport/webassets webassets
 
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
-    go build -o bin/teleport -ldflags '-w -s' -tags 'webassets_embed' ./${TOOL_FOLDER}/teleport
+    go build -o /bin/teleport -ldflags '-w -s' -tags 'webassets_embed' ./${TOOL_FOLDER}/teleport
 
-ENTRYPOINT ["/app/bin/teleport", "start", "-d"]
+FROM base as static
+
+COPY --from=tctl /bin/tctl /bin/tctl
+COPY --from=teleport /bin/teleport /bin/teleport
+
+ENV DEBUG "1"
+
+ENTRYPOINT ["/bin/teleport", "start", "-d"]
