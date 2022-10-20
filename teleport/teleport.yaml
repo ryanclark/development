@@ -7,7 +7,6 @@ auth_service:
   enabled: yes
   listen_addr: 0.0.0.0:3025
   cluster_name: teleport
-  proxy_listener_mode: multiplex
   license_file: /etc/license.pem
   session_recording: node
   tokens:
