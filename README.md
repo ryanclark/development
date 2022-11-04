@@ -144,20 +144,22 @@ between 50-75% of what your machine has.
 
 ### DNS resolution
 
-You'll need `go.teleport` to resolve to `0.0.0.0`. If you're using a service like NextDNS, it's easy to do this in their
+You'll need `go.teleport` to resolve to `127.0.0.1`. If you're using a service like NextDNS, it's easy to do this in their
 control panel.
 
 If you aren't, you can `sudo vim /etc/hosts` and add:
 
 ```
-0.0.0.0 go.teleport
-0.0.0.0 dumper.go.teleport
+127.0.0.1 go.teleport
+127.0.0.1 dumper.go.teleport
 ```
 
 If you wish to use a domain other than `go.teleport`, do a search and replace of any instance of `go.teleport` with the
 domain you pick. This is because the Docker container's hostname and name need to match, so Teleport realises it's
 running normally (as the proxy address and host address aren't different), and doesn't try to launch you into an app and
 put you in an infinite redirect loop when you try to go to the web UI.
+
+Note: Safari will refuse to connect to `go.teleport` if you use `0.0.0.0` instead of `127.0.0.1`.
 
 ## Running
 
