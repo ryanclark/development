@@ -3,18 +3,19 @@ services:
     container_name: frontend
     build:
       dockerfile: ../development/frontend/Dockerfile
-      context: ../../webapps
+      context: ../../teleport
       target: configs
     working_dir: ${WEBPACK_CONFIG_DIRECTORY}
-    command: node /app/packages/build/devserver/index.js --config ${WEBPACK_CONFIG_DIRECTORY}/webpack.dev.config.js --target https://go.teleport/web
+    command: node /app/web/packages/build/devserver/index.js --config ${WEBPACK_CONFIG_DIRECTORY}/webpack.dev.config.js --target https://go.teleport/web
     networks:
       - teleport
     ports:
       - 443:8080
       - 8888:8888
     volumes:
-      - ../../webapps/node_modules/:/app/node_modules:ro,delegated
-      - ../../webapps/packages/:/app/packages
+      - ../../teleport/node_modules/:/app/node_modules:ro,delegated
+      - ../../teleport/web/:/app/web/
+      - ../../teleport/e/web/:/app/e/web/
       - ../certs:/app/certs:ro
       - ../data/cache/frontend:/webpack/cache:rw,delegated
     environment:
@@ -58,6 +59,7 @@ services:
       - 3023:3023
     volumes:
       - ../../teleport:/app/:rw,delegated
+      - ../../teleport/webassets/:/app/webassets/
       - /app/tmp
       - ../data/cache/go-pkg:/go/pkg/mod:rw,delegated
       - ../data/cache/go:/root/.cache/go-build,delegated
