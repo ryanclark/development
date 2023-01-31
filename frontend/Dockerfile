@@ -4,17 +4,19 @@ WORKDIR /app
 
 COPY yarn.lock .
 COPY package.json .
-COPY tsconfig.json .
+
+COPY tsconfig.json /app/
+COPY web/package.json /app/web/
 
 # copy only package.json files
-COPY packages/build/package.json /app/packages/build/
-COPY packages/design/package.json /app/packages/design/
-COPY packages/shared/package.json /app/packages/shared/
-COPY packages/teleport/package.json /app/packages/teleport/
-COPY packages/teleterm/package.json /app/packages/teleterm/
+COPY web/packages/build/package.json /app/web/packages/build/
+COPY web/packages/design/package.json /app/web/packages/design/
+COPY web/packages/shared/package.json /app/web/packages/shared/
+COPY web/packages/teleport/package.json /app/web/packages/teleport/
+COPY web/packages/teleterm/package.json /app/web/packages/teleterm/
 
 # copy enterprise package.json files if present
-COPY README.md packages/webapps.e/telepor[t]/package.json /app/packages/webapps.e/teleport/
+COPY README.md e/web/telepor[t]/package.json /app/e/web/teleport/
 
 FROM configs as node-dependencies
 
