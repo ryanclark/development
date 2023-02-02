@@ -5,11 +5,11 @@ export COMPOSE_FILE = docker-compose.solo.yml
 endif
 
 ifeq ($(wildcard .e),)
-export WEBPACK_CONFIG_DIRECTORY = /app/web/packages/teleport
+export VITE_CONFIG_DIRECTORY = /app/web/packages/teleport
 export TOOL_FOLDER = tool
 export LICENSE_FILE = ../teleport/empty.pem
 else
-export WEBPACK_CONFIG_DIRECTORY = /app/e/web/teleport
+export VITE_CONFIG_DIRECTORY = /app/e/web/teleport
 export TOOL_FOLDER = e/tool
 export LICENSE_FILE = ../../teleport/e/fixtures/license-all-features.pem
 endif

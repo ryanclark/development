@@ -4,16 +4,14 @@ services:
     build:
       dockerfile: ../development/frontend/Dockerfile
       context: ../../teleport
-      target: configs
-    working_dir: ${WEBPACK_CONFIG_DIRECTORY}
-    command: node /app/web/packages/build/devserver/index.js --config ${WEBPACK_CONFIG_DIRECTORY}/webpack.dev.config.js --target https://go.teleport/web
+      target: node-dependencies
+    working_dir: ${VITE_CONFIG_DIRECTORY}
+    command: node /app/node_modules/.bin/vite --config ${VITE_CONFIG_DIRECTORY}/vite.config.ts
     networks:
       - teleport
     ports:
-      - 443:8080
-      - 8888:8888
+      - 443:3000
     volumes:
-      - ../../teleport/node_modules/:/app/node_modules:ro,delegated
       - ../../teleport/web/:/app/web/
       - ../../teleport/gen/proto/js/:/app/gen/proto/js/
       - ../../teleport/e/web/:/app/e/web/
@@ -21,10 +19,9 @@ services:
       - ../data/cache/frontend:/webpack/cache:rw,delegated
     environment:
       NODE_OPTIONS: --max-old-space-size=8192
-      WEBPACK_HTTPS_CERT: /app/certs/server.crt
-      WEBPACK_HTTPS_KEY: /app/certs/server.key
-      WEBPACK_CACHE_DIRECTORY: /webpack/cache
-      WEBPACK_ANALYZE_BUNDLE: yes
+      VITE_TARGET: go.teleport:443
+      VITE_HTTPS_CERT: /app/certs/server.crt
+      VITE_HTTPS_KEY: /app/certs/server.key
 
   node:
     build:
