@@ -28,6 +28,7 @@ FROM base as tctl
 COPY teleport/api api
 COPY teleport/lib lib
 COPY teleport/tool tool
+COPY teleport/gen gen
 
 COPY teleport/e e
 
@@ -52,6 +53,7 @@ FROM base as teleport
 COPY teleport/api api
 COPY teleport/lib lib
 COPY teleport/tool tool
+COPY teleport/gen gen
 
 COPY teleport/e e
 
