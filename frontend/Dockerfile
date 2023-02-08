@@ -6,7 +6,7 @@ COPY yarn.lock .
 COPY package.json .
 
 COPY tsconfig.json /app/
-COPY web/package.json /app/web/
+COPY package.json /app/
 
 # copy only package.json files
 COPY web/packages/build/package.json /app/web/packages/build/
