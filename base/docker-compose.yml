@@ -15,6 +15,7 @@ services:
     volumes:
       - ../../teleport/node_modules/:/app/node_modules:ro,delegated
       - ../../teleport/web/:/app/web/
+      - ../../teleport/gen/proto/js/:/app/gen/proto/js/
       - ../../teleport/e/web/:/app/e/web/
       - ../certs:/app/certs:ro
       - ../data/cache/frontend:/webpack/cache:rw,delegated
