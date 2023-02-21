@@ -15,6 +15,7 @@ services:
       - ../../teleport/web/:/app/web/
       - ../../teleport/gen/proto/js/:/app/gen/proto/js/
       - ../../teleport/e/web/:/app/e/web/
+      - ../../teleport/gen/proto/js/:/app/gen/proto/js/
       - ../certs:/app/certs:ro
       - ../data/cache/frontend:/webpack/cache:rw,delegated
     environment:
