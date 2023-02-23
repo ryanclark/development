@@ -20,7 +20,7 @@ services:
       - ../data/cache/frontend:/webpack/cache:rw,delegated
     environment:
       NODE_OPTIONS: --max-old-space-size=8192
-      VITE_TARGET: go.teleport:443
+      PROXY_TARGET: go.teleport:443
       VITE_HTTPS_CERT: /app/certs/server.crt
       VITE_HTTPS_KEY: /app/certs/server.key
 
