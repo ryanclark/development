@@ -12,7 +12,7 @@ your local Teleport repo, and will rebuild and relaunch Teleport when you change
 This uses caching for both Go and Webpack, so although the first initial run will take a few minutes, subsequent runs
 of `make start` will build both Teleport and the frontend and have them up and running in <5s.
 
-This should work on all backend versions of Teleport, and webapps from v10 onwards.
+This should work on v13+ of Teleport. If you're running v12 or below, checkout the `old` branch and re-run `make build`.
 
 ![make help](images/help.png)
 
