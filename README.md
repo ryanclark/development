@@ -34,32 +34,23 @@ This assumes you have your local directory structure setup something like:
 │   └── e
 │       └── lib
 │       └── tool
+│       └── web
 │       └── etc...
 │   │
 │   └── lib
 │   │
 │   └── tool
 │   │
+│   └── web
+│       └── packages
+│           └── teleport
+│       └── etc...
+│   │
 │   │ go.mod
 │   │ etc...
-│
-└── webapps
-│   │ packages
-│   └── teleport
-│   │   └── src
-│   │       │ package.json
-│   │       │ etc...
-│   │
-│   └── webapps.e
-│   │   └── teleport
-│   │       └── src
-│   │           │ package.json
-│   │           │ etc...
-│   │
-│   │ package.json
 ```
 
-You should clone this directory so it's next to `teleport` and `webapps`.
+You should clone this directory so it's next to `teleport`.
 
 ```
 ~/go/src/github.com/gravitational
@@ -81,29 +72,20 @@ You should clone this directory so it's next to `teleport` and `webapps`.
 │   └── e
 │       └── lib
 │       └── tool
+│       └── web
 │       └── etc...
 │   │
 │   └── lib
 │   │
 │   └── tool
 │   │
+│   └── web
+│       └── packages
+│           └── teleport
+│       └── etc...
+│   │
 │   │ go.mod
 │   │ etc...
-│
-└── webapps
-│   │ packages
-│   └── teleport
-│   │   └── src
-│   │       │ package.json
-│   │       │ etc...
-│   │
-│   └── webapps.e
-│   │   └── teleport
-│   │       └── src
-│   │           │ package.json
-│   │           │ etc...
-│   │
-│   │ package.json
 ```
 
 You don't have to have the enterprise submodules cloned if you do not want to build the enterprise version.
@@ -362,14 +344,14 @@ You'll still need to create a folder for `<service-name>` with a `teleport.yaml`
 
 ### Other info
 
-#### Only running Teleport, not Webpack too
+#### Only running Teleport, not Vite too
 
-You can go into "solo" mode, where Webpack isn't running alongside Teleport and instead you're just getting the
+You can go into "solo" mode, where Vite isn't running alongside Teleport and instead you're just getting the
 webassets built into the Teleport binary.
 
 To do this, create a file called `.solo`. The presence of this file will result in `docker-compose.solo.yml` being the
 compose file (so all `make` targets will still work with the different file) and you'll be running Teleport without
-Webpack in front.
+Vite in front.
 
 When swapping between solo mode and normal, you just need to re-run `make start`. There's nothing that needs to be
 rebuilt.
