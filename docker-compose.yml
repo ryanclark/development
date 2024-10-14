@@ -1,3 +1,4 @@
+name: dev
 services:
   frontend:
     extends:
@@ -16,7 +17,6 @@ services:
       file: base/docker-compose.yml
       service: node
     volumes:
-      - ./data/node:/var/lib/teleport
       - ./node/teleport.yaml:/etc/teleport.yaml
 
 networks:

@@ -4,7 +4,7 @@ tmp_dir = "tmp"
 [build]
 bin = "tmp/teleport"
 include_ext = ["go", "yaml"]
-exclude_dir = ["docs", "docker", "data", "assets", "operator", "proto", "rfd", "target", "vagrant", "examples", "webassets", "build", "build.assets", "web", "node_modules", "e/web"]
+exclude_dir = ["docs", "docker", "data", "assets", "operator", "proto", "rfd", "target", "vagrant", "examples", "build", "build.assets", "web", "node_modules", "e/web"]
 exclude_unchanged = true
 follow_symlink = true
 stop_on_error = true

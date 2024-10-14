@@ -64,3 +64,6 @@ data/
 # Configuration files
 .solo
 .e
+
+mutagen.yml
+mutagen.yml.lock

@@ -1,4 +1,4 @@
-FROM golang:1.19 as base
+FROM golang:1.23 AS base
 
 WORKDIR /app
 
@@ -6,9 +6,7 @@ ENV GOPATH "/go"
 ENV GOROOT "/usr/local/go"
 ENV GOOS "linux"
 ENV CGO_ENABLED 1
-ENV GOARCH "arm64"
-
-RUN apt update && apt install tree gcc -y
+ENV GOARCH "amd64"
 
 COPY development/certs/server.key /var/lib/teleport-certs/server.key
 COPY development/certs/server.crt /var/lib/teleport-certs/server.crt
@@ -23,10 +21,18 @@ COPY teleport/api/go.sum api/go.sum
 
 ARG TOOL_FOLDER
 
-FROM base as tctl
+FROM base AS tctl
+
+ENV GOPATH "/go"
+ENV GOROOT "/usr/local/go"
+ENV GOOS "linux"
+ENV CGO_ENABLED 1
+ENV GOARCH "amd64"
 
 COPY teleport/api api
+COPY teleport/entitlements entitlements
 COPY teleport/lib lib
+COPY teleport/integrations integrations
 COPY teleport/tool tool
 COPY teleport/gen gen
 
@@ -36,11 +42,16 @@ COPY teleport/*.go .
 
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
-    go build -o /bin/tctl -ldflags '-w -s' ./${TOOL_FOLDER}/tctl
+    go build -o /bin/tctl -ldflags '-w -s' ./tool/tctl
 
-FROM base as live-reload
+FROM golang:1.23 AS live-reload
 
-RUN go install github.com/cosmtrek/air@latest
+COPY development/certs/server.key /var/lib/teleport-certs/server.key
+COPY development/certs/server.crt /var/lib/teleport-certs/server.crt
+
+RUN cp /var/lib/teleport-certs/server.crt /usr/local/share/ca-certificates/teleport.crt && update-ca-certificates
+
+RUN go install github.com/air-verse/air@latest
 
 COPY --from=tctl /bin/tctl /bin/tctl
 
@@ -48,10 +59,18 @@ ENV DEBUG "1"
 
 ENTRYPOINT ["/go/bin/air"]
 
-FROM base as teleport
+FROM base AS teleport
+
+ENV GOPATH "/go"
+ENV GOROOT "/usr/local/go"
+ENV GOOS "linux"
+ENV CGO_ENABLED 1
+ENV GOARCH "amd64"
 
 COPY teleport/api api
+COPY teleport/entitlements entitlements
 COPY teleport/lib lib
+COPY teleport/integrations integrations
 COPY teleport/tool tool
 COPY teleport/gen gen
 
@@ -65,7 +84,7 @@ RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
     go build -o /bin/teleport -ldflags '-w -s' -tags 'webassets_embed' ./${TOOL_FOLDER}/teleport
 
-FROM base as static
+FROM base AS static
 
 COPY --from=tctl /bin/tctl /bin/tctl
 COPY --from=teleport /bin/teleport /bin/teleport

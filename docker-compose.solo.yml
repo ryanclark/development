@@ -1,3 +1,4 @@
+name: dev
 services:
   go.teleport:
     extends:
@@ -13,5 +14,4 @@ services:
       file: base/docker-compose.yml
       service: node
     volumes:
-      - ./data/node:/var/lib/teleport
       - ./node/teleport.yaml:/etc/teleport.yaml

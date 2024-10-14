@@ -3,16 +3,14 @@
 This helps you run a local Teleport environment locally at https://go.teleport, with trusted local certificates (no
 `--insecure` anywhere).
 
-It sets up a single Teleport service that runs the Auth and Proxy services, as well as a container to run Webpack so you
+It sets up a single Teleport service that runs the Auth and Proxy services, as well as a container to run Vite so you
 can build both Teleport and the Web code at the same time. It also runs Application Access with the debug dumper app.
 
 File changes for the Teleport repo are sync'd and then [air](https://github.com/cosmtrek/air) watches for any changes to
 your local Teleport repo, and will rebuild and relaunch Teleport when you change a `.go` or `.yaml` file.
 
-This uses caching for both Go and Webpack, so although the first initial run will take a few minutes, subsequent runs
+This uses caching for both Go and Vite, so although the first initial run will take a few minutes, subsequent runs
 of `make start` will build both Teleport and the frontend and have them up and running in <5s.
-
-This should work on v13+ of Teleport. If you're running v12 or below, checkout the `old` branch and re-run `make build`.
 
 ![make help](images/help.png)
 

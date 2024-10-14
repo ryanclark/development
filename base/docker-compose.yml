@@ -4,20 +4,19 @@ services:
     build:
       dockerfile: ../development/frontend/Dockerfile
       context: ../../teleport
-      target: node-dependencies
     working_dir: ${VITE_CONFIG_DIRECTORY}
-    command: node /app/node_modules/.bin/vite --config ${VITE_CONFIG_DIRECTORY}/vite.config.ts
+    command: pnpm start
     networks:
       - teleport
     ports:
       - 443:3000
     volumes:
       - ../../teleport/web/:/app/web/
-      - ../../teleport/gen/proto/js/:/app/gen/proto/js/
+      - ../../teleport/gen/proto/ts/:/app/gen/proto/ts/
       - ../../teleport/e/web/:/app/e/web/
-      - ../../teleport/gen/proto/js/:/app/gen/proto/js/
+      - ../../teleport/lib/srv/desktop/rdp/rdpclient/:/app/lib/srv/desktop/rdp/rdpclient
       - ../certs:/app/certs:ro
-      - ../data/cache/frontend:/webpack/cache:rw,delegated
+      - /usr/local/cargo
     environment:
       NODE_OPTIONS: --max-old-space-size=8192
       PROXY_TARGET: go.teleport:443
@@ -31,6 +30,8 @@ services:
       target: static
       args:
         TOOL_FOLDER: ${TOOL_FOLDER}
+    volumes:
+      - /var/lib/teleport
     networks:
       - teleport
 
@@ -43,9 +44,10 @@ services:
       target: live-reload
       args:
         TOOL_FOLDER: ${TOOL_FOLDER}
+    working_dir: /app
     command:
       - --build.cmd
-      - "go build -o tmp/teleport -ldflags '-w -s' -tags 'webassets_embed' ./${TOOL_FOLDER}/teleport"
+      - "go build -buildvcs=false -o tmp/teleport -ldflags '-w -s' -tags 'webassets_embed webassets_ent' ./${TOOL_FOLDER}/teleport"
     networks:
       teleport:
         aliases:
@@ -60,14 +62,12 @@ services:
       - ../../teleport:/app/:rw,delegated
       - ../../teleport/webassets/:/app/webassets/
       - /app/tmp
-      - ../data/cache/go-pkg:/go/pkg/mod:rw,delegated
-      - ../data/cache/go:/root/.cache/go-build,delegated
-      - ../data/teleport:/var/lib/teleport
+      - /go/pkg/mod
+      - /root/.cache/go-build
+      - /var/lib/teleport
       - ../build/.air.toml:/app/.air.toml
       - ../teleport/teleport.yaml:/etc/teleport.yaml
       - ${LICENSE_FILE}:/etc/license.pem
-    environment:
-      TELEPORT_UNSTABLE_VC_SYNC_ON_START: yes
 
 networks:
   teleport:
