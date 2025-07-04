@@ -4,14 +4,14 @@ teleport:
 
 access_graph:
   enabled: true
-  endpoint: access-graph:50051
-  ca: /etc/access-graph/keys/ca.crt
+  endpoint: accessgraph:50051
+  insecure: true
 
 auth_service:
   enabled: yes
   listen_addr: 0.0.0.0:3025
   cluster_name: teleport
-  license_file: /app/e/fixtures/license-test.pem
+  license_file: /etc/license.pem
   session_recording: node
   tokens:
     - "node:node-token"
@@ -230,7 +230,7 @@ proxy_service:
   listen_addr: 0.0.0.0:3023
   tunnel_listen_addr: 0.0.0.0:3024
   web_listen_addr: 0.0.0.0:443
-  public_addr: go.teleport:443
+  public_addr: go.teleport:3080
   https_keypairs:
     - key_file: /var/lib/teleport-certs/server.key
       cert_file: /var/lib/teleport-certs/server.crt

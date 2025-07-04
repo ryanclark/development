@@ -1,4 +1,4 @@
-FROM golang:1.23 AS base
+FROM golang:1.24 AS base
 
 WORKDIR /app
 
@@ -44,7 +44,7 @@ RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
     go build -o /bin/tctl -ldflags '-w -s' ./tool/tctl
 
-FROM golang:1.23 AS live-reload
+FROM golang:1.24 AS live-reload
 
 COPY development/certs/server.key /var/lib/teleport-certs/server.key
 COPY development/certs/server.crt /var/lib/teleport-certs/server.crt
@@ -52,6 +52,12 @@ COPY development/certs/server.crt /var/lib/teleport-certs/server.crt
 RUN cp /var/lib/teleport-certs/server.crt /usr/local/share/ca-certificates/teleport.crt && update-ca-certificates
 
 RUN go install github.com/air-verse/air@latest
+
+COPY access-graph/keys/server.crt /var/lib/teleport-certs/access-graph.crt
+COPY access-graph/keys/ca.crt /var/lib/teleport-certs/access-graph-ca.crt
+
+RUN cp /var/lib/teleport-certs/access-graph.crt /usr/local/share/ca-certificates/access-graph.crt && update-ca-certificates
+RUN cp /var/lib/teleport-certs/access-graph-ca.crt /usr/local/share/ca-certificates/access-graph-ca.crt && update-ca-certificates
 
 COPY --from=tctl /bin/tctl /bin/tctl
 

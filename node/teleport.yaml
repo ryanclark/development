@@ -1,6 +1,6 @@
 version: v3
 teleport:
-  nodename: node
+  nodename: server-1
   data_dir: /var/lib/teleport
 
   auth_token: node-token
@@ -11,7 +11,7 @@ ssh_service:
   listen_addr: 0.0.0.0:3022
   commands:
     - name: hostname
-      command: [ hostname ]
+      command: [ echo, "instance-1" ]
       period: 1m0s
 
 auth_service:

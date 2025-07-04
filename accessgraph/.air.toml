@@ -1,0 +1,25 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+bin = "tmp/tag"
+include_ext = ["go", "yaml"]
+exclude_dir = ["web", "e2e", "teleport"]
+exclude_unchanged = true
+follow_symlink = true
+stop_on_error = true
+send_interrupt = true
+kill_delay = 1000
+args_bin = ["start"]
+
+[log]
+time = false
+
+[color]
+main = "magenta"
+watcher = "cyan"
+build = "yellow"
+runner = "green"
+
+[misc]
+clean_on_exit = true
