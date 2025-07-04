@@ -1,8 +1,8 @@
 services:
-  go.teleport:
+  beast:
     extends:
       file: base/docker-compose.yml
-      service: go.teleport
+      service: beast
     ports:
       - 443:3080
 

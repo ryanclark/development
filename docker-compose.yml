@@ -1,8 +1,8 @@
 services:
-  go.teleport:
+  beast:
     extends:
       file: base/docker-compose.yml
-      service: go.teleport
+      service: beast
 
   node2:
     container_name: node2

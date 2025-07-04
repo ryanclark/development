@@ -51,9 +51,9 @@ down:
 
 .PHONY: cert setup
 
-## Creates a local self signed certificate % for `go.teleport` and `*.teleport` via `mkcert`
+## Creates a local self signed certificate % for `beast` and `*.teleport` via `mkcert`
 cert:
-	mkdir -p certs && mkcert -cert-file certs/server.crt -key-file certs/server.key go.teleport "*.teleport" "*.go.teleport"
+	mkdir -p certs && mkcert -cert-file certs/server.crt -key-file certs/server.key beast "*.teleport" "*.beast"
 
 ## Creates the initial admin user % alias for `make tctl users add admin --roles=editor,access --logins=root,ubuntu,ec2-user`
 setup: TCTL_ARGS="users add admin --roles=editor,access --logins=root,ubuntu,ec2-user"
@@ -88,16 +88,16 @@ $(eval $(TCTL_ARGS):;@:)
 endif
 ## Runs `tctl <command>` inside the Teleport container
 tctl:
-	docker compose exec go.teleport /bin/tctl $(TCTL_ARGS)
+	docker compose exec beast /bin/tctl $(TCTL_ARGS)
 
-## Shows and follows the logs from the Teleport container % alias for `make logs -- -f go.teleport`
-teleport-logs: LOGS_ARGS="-f go.teleport"
+## Shows and follows the logs from the Teleport container % alias for `make logs -- -f beast`
+teleport-logs: LOGS_ARGS="-f beast"
 teleport-logs:
 	$(MAKE) logs LOGS_ARGS=$(LOGS_ARGS)
 
 ## Opens an interactive shell inside the Teleport container
 teleport-shell:
-	docker compose exec -it go.teleport /bin/bash
+	docker compose exec -it beast /bin/bash
 
 
 .PHONY: delete-db-volume

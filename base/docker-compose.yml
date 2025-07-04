@@ -15,13 +15,11 @@ services:
       - ../../access-graph/web:/app/web
       - ../../access-graph/teleport:/app/teleport
       - ../certs:/app/certs:ro
-      - ../data/cache/frontend:/webpack/cache:rw,delegated
     environment:
       NODE_OPTIONS: --max-old-space-size=8192
-      PROXY_TARGET: go.teleport:443
+      PROXY_TARGET: beast:443
       VITE_HTTPS_CERT: /app/certs/server.crt
       VITE_HTTPS_KEY: /app/certs/server.key
-      POLY_API_KEY: HvMA3rfToChIPdffmVTJin92c8YpHRQ3
 
   node:
     build:
@@ -33,9 +31,9 @@ services:
     networks:
       - teleport
 
-  go.teleport:
-    container_name: go.teleport
-    hostname: go.teleport
+  beast:
+    container_name: beast
+    hostname: beast
     build:
       dockerfile: development/build/Dockerfile
       context: ../..
@@ -49,8 +47,8 @@ services:
     networks:
       teleport:
         aliases:
-          - go.teleport
-          - dumper.go.teleport
+          - beast
+          - dumper.beast
     ports:
       - 3080:443
       - 3025:3025

@@ -4,7 +4,7 @@ teleport:
   data_dir: /var/lib/teleport
 
   auth_token: node-token
-  proxy_server: go.teleport:443
+  proxy_server: beast:443
 
 ssh_service:
   enabled: "yes"

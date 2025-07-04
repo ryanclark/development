@@ -1,18 +1,18 @@
 services:
-  go.teleport:
+  beast:
     platform: linux/arm64/v8
     extends:
       file: base/docker-compose.yml
-      service: go.teleport
-    container_name: go.teleport
-    hostname: go.teleport
+      service: beast
+    container_name: beast
+    hostname: beast
     volumes:
       - ./teleport/local/teleport.yaml:/etc/teleport.yaml
     networks:
       teleport:
         aliases:
-          - go.teleport
-          - dumper.go.teleport
+          - beast
+          - dumper.beast
 
   node:
     container_name: node

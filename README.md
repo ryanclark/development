@@ -1,6 +1,6 @@
 # Teleport Development Environment
 
-This helps you run a local Teleport environment locally at https://go.teleport, with trusted local certificates (no
+This helps you run a local Teleport environment locally at https://beast, with trusted local certificates (no
 `--insecure` anywhere).
 
 It sets up a single Teleport service that runs the Auth and Proxy services, as well as a container to run Webpack so you
@@ -126,17 +126,17 @@ between 50-75% of what your machine has.
 
 ### DNS resolution
 
-You'll need `go.teleport` to resolve to `0.0.0.0`. If you're using a service like NextDNS, it's easy to do this in their
+You'll need `beast` to resolve to `0.0.0.0`. If you're using a service like NextDNS, it's easy to do this in their
 control panel.
 
 If you aren't, you can `sudo vim /etc/hosts` and add:
 
 ```
-0.0.0.0 go.teleport
-0.0.0.0 dumper.go.teleport
+0.0.0.0 beast
+0.0.0.0 dumper.beast
 ```
 
-If you wish to use a domain other than `go.teleport`, do a search and replace of any instance of `go.teleport` with the
+If you wish to use a domain other than `beast`, do a search and replace of any instance of `beast` with the
 domain you pick. This is because the Docker container's hostname and name need to match, so Teleport realises it's
 running normally (as the proxy address and host address aren't different), and doesn't try to launch you into an app and
 put you in an infinite redirect loop when you try to go to the web UI.
@@ -291,7 +291,7 @@ differently.
 
 #### Services that rebuild on code changes
 
-If you want to rebuild Teleport on every file change, you'll want to copy how the Auth Service (`go.teleport`) is setup,
+If you want to rebuild Teleport on every file change, you'll want to copy how the Auth Service (`beast`) is setup,
 like this:
 
 ```yaml
@@ -406,7 +406,7 @@ You can also run `make help` to get a list of the available Make targets.
 
 **Setup**
 
-- `make cert` - creates the self-signed certificate for `go.teleport` and `*.teleport` with `mkcert`
+- `make cert` - creates the self-signed certificate for `beast` and `*.teleport` with `mkcert`
 - `make setup` - sets up the default admin user via an alias
   to `make tctl users add admin --roles=editor,access --logins=root,ubuntu,ec2-user`
 
@@ -416,5 +416,5 @@ You can also run `make help` to get a list of the available Make targets.
 - `make frontend-shell` - open an interactive shell inside the frontend container
 - `make logs <command>` - runs `docker compose logs <command>`
 - `make tctl <command>` - runs `tctl` inside the Teleport container
-- `make teleport-logs` - alias for `make logs -- -f go.teleport`
+- `make teleport-logs` - alias for `make logs -- -f beast`
 - `make teleport-shell` - open an interactive shell inside the Teleport container

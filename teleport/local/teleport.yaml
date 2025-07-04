@@ -21,7 +21,7 @@ auth_service:
     type: local
     second_factor: on
     webauthn:
-      rp_id: go.teleport
+      rp_id: beast
     connector_name: passwordless
 
 app_service:
@@ -30,7 +30,7 @@ app_service:
   apps:
     - name: "grafana-production"
       uri: "http://localhost:3000"
-      public_addr: "grafana.go.teleport"
+      public_addr: "grafana.beast"
       labels:
         env: production
         app: grafana
@@ -38,7 +38,7 @@ app_service:
         family: eks
     - name: "grafana-staging"
       uri: "http://localhost:3000"
-      public_addr: "grafana-staging.go.teleport"
+      public_addr: "grafana-staging.beast"
       labels:
         env: staging
         app: grafana
@@ -46,7 +46,7 @@ app_service:
         family: eks
     - name: "jenkins-production"
       uri: "http://localhost:3000"
-      public_addr: "jenkins.go.teleport"
+      public_addr: "jenkins.beast"
       labels:
         env: production
         app: jenkins
@@ -54,7 +54,7 @@ app_service:
         family: eks
     - name: "jenkins-staging"
       uri: "http://localhost:3000"
-      public_addr: "jenkins-staging.go.teleport"
+      public_addr: "jenkins-staging.beast"
       labels:
         env: staging
         app: jenkins
@@ -62,7 +62,7 @@ app_service:
         family: eks
     - name: "atlantis"
       uri: "http://localhost:3000"
-      public_addr: "atlantis.go.teleport"
+      public_addr: "atlantis.beast"
       labels:
         env: production
         app: atlantis
@@ -70,7 +70,7 @@ app_service:
         family: eks
     - name: "artifactory"
       uri: "http://localhost:3000"
-      public_addr: "artifactory.go.teleport"
+      public_addr: "artifactory.beast"
       labels:
         env: production
         app: artifactory
@@ -78,7 +78,7 @@ app_service:
         family: eks
     - name: "wordpress"
       uri: "http://localhost:3000"
-      public_addr: "wordpress.go.teleport"
+      public_addr: "wordpress.beast"
       labels:
         env: production
         app: wordpress
@@ -86,7 +86,7 @@ app_service:
         family: eks
     - name: "aws-production"
       uri: "http://localhost:3000"
-      public_addr: "aws.go.teleport"
+      public_addr: "aws.beast"
       labels:
         env: production
         app: aws
@@ -94,7 +94,7 @@ app_service:
         family: eks
     - name: "aws-staging"
       uri: "http://localhost:3000"
-      public_addr: "aws-staging.go.teleport"
+      public_addr: "aws-staging.beast"
       labels:
         env: staging
         app: aws
@@ -102,7 +102,7 @@ app_service:
         family: eks
     - name: "posthog-production"
       uri: "http://localhost:3000"
-      public_addr: "posthog.go.teleport"
+      public_addr: "posthog.beast"
       labels:
         env: production
         app: posthog
@@ -110,7 +110,7 @@ app_service:
         family: eks
     - name: "posthog-staging"
       uri: "http://localhost:3000"
-      public_addr: "posthog-staging.go.teleport"
+      public_addr: "posthog-staging.beast"
       labels:
         env: staging
         app: posthog
@@ -118,17 +118,17 @@ app_service:
         family: eks
     - name: "github"
       uri: "http://localhost:3000"
-      public_addr: "github.go.teleport"
+      public_addr: "github.beast"
       labels:
         app: github
     - name: "spacelift"
       uri: "http://localhost:3000"
-      public_addr: "spacelift.go.teleport"
+      public_addr: "spacelift.beast"
       labels:
         app: spacelift
     - name: "grafana-production2"
       uri: "http://localhost:3000"
-      public_addr: "grafana.go.teleport"
+      public_addr: "grafana.beast"
       labels:
         env: production
         app: grafana
@@ -136,7 +136,7 @@ app_service:
         family: eks
     - name: "grafana-staging2"
       uri: "http://localhost:3000"
-      public_addr: "grafana-staging.go.teleport"
+      public_addr: "grafana-staging.beast"
       labels:
         env: staging
         app: grafana
@@ -144,7 +144,7 @@ app_service:
         family: eks
     - name: "jenkins-production2"
       uri: "http://localhost:3000"
-      public_addr: "jenkins.go.teleport"
+      public_addr: "jenkins.beast"
       labels:
         env: production
         app: jenkins
@@ -152,7 +152,7 @@ app_service:
         family: eks
     - name: "jenkins-staging2"
       uri: "http://localhost:3000"
-      public_addr: "jenkins-staging.go.teleport"
+      public_addr: "jenkins-staging.beast"
       labels:
         env: staging
         app: jenkins
@@ -160,7 +160,7 @@ app_service:
         family: eks
     - name: "atlantis2"
       uri: "http://localhost:3000"
-      public_addr: "atlantis.go.teleport"
+      public_addr: "atlantis.beast"
       labels:
         env: production
         app: atlantis
@@ -168,7 +168,7 @@ app_service:
         family: eks
     - name: "artifactory2"
       uri: "http://localhost:3000"
-      public_addr: "artifactory.go.teleport"
+      public_addr: "artifactory.beast"
       labels:
         env: production
         app: artifactory
@@ -176,7 +176,7 @@ app_service:
         family: eks
     - name: "wordpress2"
       uri: "http://localhost:3000"
-      public_addr: "wordpress.go.teleport"
+      public_addr: "wordpress.beast"
       labels:
         env: production
         app: wordpress
@@ -184,7 +184,7 @@ app_service:
         family: eks
     - name: "aws-production2"
       uri: "http://localhost:3000"
-      public_addr: "aws.go.teleport"
+      public_addr: "aws.beast"
       labels:
         env: production
         app: aws
@@ -192,7 +192,7 @@ app_service:
         family: eks
     - name: "aws-staging2"
       uri: "http://localhost:3000"
-      public_addr: "aws-staging.go.teleport"
+      public_addr: "aws-staging.beast"
       labels:
         env: staging
         app: aws
@@ -200,7 +200,7 @@ app_service:
         family: eks
     - name: "posthog-production2"
       uri: "http://localhost:3000"
-      public_addr: "posthog.go.teleport"
+      public_addr: "posthog.beast"
       labels:
         env: production
         app: posthog
@@ -208,7 +208,7 @@ app_service:
         family: eks
     - name: "posthog-staging2"
       uri: "http://localhost:3000"
-      public_addr: "posthog-staging.go.teleport"
+      public_addr: "posthog-staging.beast"
       labels:
         env: staging
         app: posthog
@@ -216,12 +216,12 @@ app_service:
         family: eks
     - name: "github2"
       uri: "http://localhost:3000"
-      public_addr: "github.go.teleport"
+      public_addr: "github.beast"
       labels:
         app: github
     - name: "spacelift2"
       uri: "http://localhost:3000"
-      public_addr: "spacelift.go.teleport"
+      public_addr: "spacelift.beast"
       labels:
         app: spacelift
 
@@ -230,7 +230,7 @@ proxy_service:
   listen_addr: 0.0.0.0:3023
   tunnel_listen_addr: 0.0.0.0:3024
   web_listen_addr: 0.0.0.0:443
-  public_addr: go.teleport:3080
+  public_addr: beast:3080
   https_keypairs:
     - key_file: /var/lib/teleport-certs/server.key
       cert_file: /var/lib/teleport-certs/server.crt
