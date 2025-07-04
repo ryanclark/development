@@ -1,23 +1,28 @@
-name: dev
 services:
-  frontend:
-    extends:
-      file: base/docker-compose.yml
-      service: frontend
-
   go.teleport:
     extends:
       file: base/docker-compose.yml
       service: go.teleport
 
-  node:
-    container_name: node
-    hostname: node
+  node2:
+    container_name: node2
+    hostname: node2
     extends:
       file: base/docker-compose.yml
       service: node
     volumes:
+      - /var/lib/teleport
       - ./node/teleport.yaml:/etc/teleport.yaml
+
+  access-graph:
+    extends:
+      file: base/docker-compose.yml
+      service: access-graph
+
+  db:
+    extends:
+      file: base/docker-compose.yml
+      service: db
 
 networks:
   teleport:

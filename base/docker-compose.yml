@@ -2,26 +2,26 @@ services:
   frontend:
     container_name: frontend
     build:
-      dockerfile: ../development/frontend/Dockerfile
-      context: ../../teleport
-    working_dir: ${VITE_CONFIG_DIRECTORY}
-    command: pnpm start
+      dockerfile: development/frontend/Dockerfile
+      context: ../../
+      target: node-dependencies
+    working_dir: /app/web
+    command: yarn start
     networks:
       - teleport
     ports:
       - 443:3000
     volumes:
-      - ../../teleport/web/:/app/web/
-      - ../../teleport/gen/proto/ts/:/app/gen/proto/ts/
-      - ../../teleport/e/web/:/app/e/web/
-      - ../../teleport/lib/srv/desktop/rdp/rdpclient/:/app/lib/srv/desktop/rdp/rdpclient
+      - ../../access-graph/web:/app/web
+      - ../../access-graph/teleport:/app/teleport
       - ../certs:/app/certs:ro
-      - /usr/local/cargo
+      - ../data/cache/frontend:/webpack/cache:rw,delegated
     environment:
       NODE_OPTIONS: --max-old-space-size=8192
       PROXY_TARGET: go.teleport:443
       VITE_HTTPS_CERT: /app/certs/server.crt
       VITE_HTTPS_KEY: /app/certs/server.key
+      POLY_API_KEY: HvMA3rfToChIPdffmVTJin92c8YpHRQ3
 
   node:
     build:
@@ -30,8 +30,6 @@ services:
       target: static
       args:
         TOOL_FOLDER: ${TOOL_FOLDER}
-    volumes:
-      - /var/lib/teleport
     networks:
       - teleport
 
@@ -68,6 +66,50 @@ services:
       - ../build/.air.toml:/app/.air.toml
       - ../teleport/teleport.yaml:/etc/teleport.yaml
       - ${LICENSE_FILE}:/etc/license.pem
+      - ../../access-graph/keys/ca.crt:/etc/access-graph/keys/ca.crt
+    environment:
+      TELEPORT_UNSTABLE_VC_SYNC_ON_START: yes
+      TELEPORT_ALLOW_NO_SECOND_FACTOR: yes
+      TELEPORT_UNSTABLE_SKIP_VERSION_UPGRADE_CHECK: yes
+    deploy:
+      resources:
+        limits:
+          memory: 48G
+
+  access-graph:
+    build:
+      context: ../..
+      dockerfile: development/accessgraph/Dockerfile
+    command:
+      - --build.cmd
+      - "go build -o tmp/tag ./cmd/tag/main.go"
+    ports:
+      - 50051:50051
+    volumes:
+      - ../accessgraph/config.yaml:/app/config.yaml
+      - ../../access-graph:/app
+      - ../accessgraph/.air.toml:/app/.air.toml
+      - /go/pkg/mod
+      - /root/.cache/go-build
+    networks:
+      - teleport
+
+  db:
+    build:
+      context: ../..
+      dockerfile: development/postgres/Dockerfile
+    restart: always
+    shm_size: 256m
+    ports:
+      - 5434:5432
+    volumes:
+      - /var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: localpass
+      POSTGRES_DB: postgres
+    networks:
+      - teleport
 
 networks:
   teleport:

@@ -1,0 +1,40 @@
+services:
+  go.teleport:
+    platform: linux/arm64/v8
+    extends:
+      file: base/docker-compose.yml
+      service: go.teleport
+    container_name: go.teleport
+    hostname: go.teleport
+    volumes:
+      - ./teleport/local/teleport.yaml:/etc/teleport.yaml
+    networks:
+      teleport:
+        aliases:
+          - go.teleport
+          - dumper.go.teleport
+
+  node:
+    container_name: node
+    hostname: node
+    platform: linux/arm64/v8
+    extends:
+      file: base/docker-compose.yml
+      service: node
+    volumes:
+      - ./data/node:/var/lib/teleport
+      - ./node/teleport.yaml:/etc/teleport.yaml
+
+  accessgraph:
+    platform: linux/arm64/v8
+    extends:
+      file: base/docker-compose.yml
+      service: accessgraph
+
+  db:
+    extends:
+      file: base/docker-compose.yml
+      service: db
+
+networks:
+  teleport:

@@ -1,0 +1,16 @@
+backend:
+  postgres:
+    connection: postgres://postgres:localpass@db:5432/postgres?sslmode=disable
+tls:
+  cert: keys/server.crt
+  key: keys/server_docker.key
+
+tracing:
+  enabled: false
+
+log:
+  level: DEBUG
+
+registration_cas:
+  - keys/teleport_host_ca.pem
+  - keys/ca.crt

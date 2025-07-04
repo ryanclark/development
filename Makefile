@@ -5,13 +5,13 @@ export COMPOSE_FILE = docker-compose.solo.yml
 endif
 
 ifeq ($(wildcard .e),)
-export VITE_CONFIG_DIRECTORY = /app/web/packages/teleport
+export VITE_CONFIG_DIRECTORY = /app/teleport/web/packages/teleport
 export TOOL_FOLDER = tool
 export LICENSE_FILE = ../teleport/empty.pem
 else
-export VITE_CONFIG_DIRECTORY = /app/e/web/teleport
+export VITE_CONFIG_DIRECTORY = /app/web
 export TOOL_FOLDER = e/tool
-export LICENSE_FILE = ../../teleport/e/fixtures/license-all-features.pem
+export LICENSE_FILE = ../../teleport/e/fixtures/license-enterprise.pem
 endif
 
 ## -- 🛟  Lifecycle --
@@ -98,6 +98,11 @@ teleport-logs:
 ## Opens an interactive shell inside the Teleport container
 teleport-shell:
 	docker compose exec -it go.teleport /bin/bash
+
+
+.PHONY: delete-db-volume
+delete-db-volume:
+	docker compose down db -v
 
 ## -- 🔧 Misc --
 

@@ -4,14 +4,14 @@ teleport:
 
 access_graph:
   enabled: true
-  endpoint: access-graph:50051
-  ca: /etc/access-graph/keys/ca.crt
+  endpoint: accessgraph:50051
+  insecure: true
 
 auth_service:
   enabled: yes
   listen_addr: 0.0.0.0:3025
   cluster_name: teleport
-  license_file: /app/e/fixtures/license-test.pem
+  license_file: /etc/license.pem
   session_recording: node
   tokens:
     - "node:node-token"
