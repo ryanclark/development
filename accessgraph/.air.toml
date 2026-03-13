@@ -10,7 +10,7 @@ follow_symlink = true
 stop_on_error = true
 send_interrupt = true
 kill_delay = 1000
-args_bin = ["start"]
+args_bin = ["run"]
 
 [log]
 time = false

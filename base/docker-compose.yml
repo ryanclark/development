@@ -1,26 +1,4 @@
 services:
-  frontend:
-    container_name: frontend
-    build:
-      dockerfile: development/frontend/Dockerfile
-      context: ../../
-      target: node-dependencies
-    working_dir: /app/web
-    command: yarn start
-    networks:
-      - teleport
-    ports:
-      - 443:3000
-    volumes:
-      - ../../access-graph/web:/app/web
-      - ../../access-graph/teleport:/app/teleport
-      - ../certs:/app/certs:ro
-    environment:
-      NODE_OPTIONS: --max-old-space-size=8192
-      PROXY_TARGET: beast:443
-      VITE_HTTPS_CERT: /app/certs/server.crt
-      VITE_HTTPS_KEY: /app/certs/server.key
-
   node:
     build:
       dockerfile: development/build/Dockerfile
@@ -43,7 +21,7 @@ services:
     working_dir: /app
     command:
       - --build.cmd
-      - "go build -buildvcs=false -o tmp/teleport -ldflags '-w -s' -tags 'webassets_embed webassets_ent' ./${TOOL_FOLDER}/teleport"
+      - "go build -buildvcs=false -o tmp/teleport -ldflags '-w -s' -tags 'desktop_access_rdp webassets_embed webassets_ent' ./${TOOL_FOLDER}/teleport"
     networks:
       teleport:
         aliases:
@@ -51,6 +29,7 @@ services:
           - dumper.beast
     ports:
       - 3080:443
+      - 3026:3026
       - 3025:3025
       - 3024:3024
       - 3023:3023
@@ -65,6 +44,9 @@ services:
       - ../teleport/teleport.yaml:/etc/teleport.yaml
       - ${LICENSE_FILE}:/etc/license.pem
       - ../../access-graph/keys/ca.crt:/etc/access-graph/keys/ca.crt
+    env_file:
+      - path: ../aws.env
+        required: false
     environment:
       TELEPORT_UNSTABLE_VC_SYNC_ON_START: yes
       TELEPORT_ALLOW_NO_SECOND_FACTOR: yes
@@ -80,7 +62,7 @@ services:
       dockerfile: development/accessgraph/Dockerfile
     command:
       - --build.cmd
-      - "go build -o tmp/tag ./cmd/tag/main.go"
+      - "go build -buildvcs=false -o tmp/tag ./cmd/tag"
     ports:
       - 50051:50051
     volumes:
@@ -101,7 +83,24 @@ services:
     ports:
       - 5434:5432
     volumes:
-      - /var/lib/postgresql/data
+      - ../../development/db-data:/var/lib/postgresql
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: localpass
+      POSTGRES_DB: postgres
+    networks:
+      - teleport
+
+  teleport-db:
+    build:
+      context: ../..
+      dockerfile: development/postgres/Dockerfile.teleport
+    container_name: teleport-db
+    hostname: teleport-db
+    restart: always
+    shm_size: 256m
+    ports:
+      - 5435:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: localpass

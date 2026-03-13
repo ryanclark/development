@@ -24,5 +24,10 @@ services:
       file: base/docker-compose.yml
       service: db
 
+  teleport-db:
+    extends:
+      file: base/docker-compose.yml
+      service: teleport-db
+
 networks:
   teleport:

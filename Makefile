@@ -1,9 +1,3 @@
-ifeq ($(wildcard .solo),)
-export COMPOSE_FILE = docker-compose.yml
-else
-export COMPOSE_FILE = docker-compose.solo.yml
-endif
-
 ifeq ($(wildcard .e),)
 export VITE_CONFIG_DIRECTORY = /app/teleport/web/packages/teleport
 export TOOL_FOLDER = tool
@@ -47,9 +41,12 @@ clean:
 down:
 	docker compose down
 
+build-pull:
+	docker compose build --pull
+
 ## -- 🔧 Setup --
 
-.PHONY: cert setup
+.PHONY: build-rdp cert setup
 
 ## Creates a local self signed certificate % for `beast` and `*.teleport` via `mkcert`
 cert:
@@ -60,19 +57,12 @@ setup: TCTL_ARGS="users add admin --roles=editor,access --logins=root,ubuntu,ec2
 setup:
 	$(MAKE) tctl TCTL_ARGS=$(TCTL_ARGS)
 
+build-rdp:
+	docker buildx build --no-cache-filter rdpclient-builder -f build/Dockerfile ..
 
 ## -- 📟 Commands --
 
-.PHONY: frontend-logs frontend-shell logs tctl teleport-logs teleport-shell
-
-frontend-logs: LOGS_ARGS="-f frontend"
-## Shows and follows the logs from the frontend container % alias for `make logs -- -f frontend`
-frontend-logs:
-	$(MAKE) logs LOGS_ARGS=$(LOGS_ARGS)
-
-## Opens an interactive shell inside the frontend container
-frontend-shell:
-	docker compose exec -it frontend /bin/bash
+.PHONY: logs tctl teleport-logs teleport-shell
 
 ifeq (logs,$(firstword $(MAKECMDGOALS)))
 LOGS_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
@@ -103,6 +93,16 @@ teleport-shell:
 .PHONY: delete-db-volume
 delete-db-volume:
 	docker compose down db -v
+
+## -- ☁️  AWS --
+
+.PHONY: aws-credentials
+
+## Writes current AWS credentials to `aws.env` % exports AWS_* vars from your shell (works with SSO, assume-role, etc.)
+aws-credentials:
+	@env | grep '^AWS_' | grep -v 'AWS_PROFILE' > aws.env || \
+		(echo "No AWS_* environment variables found. Export them first." && exit 1)
+	@echo "AWS credentials written to aws.env"
 
 ## -- 🔧 Misc --
 

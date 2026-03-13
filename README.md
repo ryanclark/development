@@ -3,14 +3,16 @@
 This helps you run a local Teleport environment locally at https://beast, with trusted local certificates (no
 `--insecure` anywhere).
 
-It sets up a single Teleport service that runs the Auth and Proxy services, as well as a container to run Webpack so you
-can build both Teleport and the Web code at the same time. It also runs Application Access with the debug dumper app.
+It sets up a single Teleport service that runs the Auth and Proxy services. It also runs Application Access with the
+debug dumper app.
 
-File changes for the Teleport repo are sync'd and then [air](https://github.com/cosmtrek/air) watches for any changes to
-your local Teleport repo, and will rebuild and relaunch Teleport when you change a `.go` or `.yaml` file.
+[air](https://github.com/cosmtrek/air) watches for any changes to your local Teleport repo, and will rebuild and
+relaunch Teleport when you change a `.go` or `.yaml` file.
 
-This uses caching for both Go and Webpack, so although the first initial run will take a few minutes, subsequent runs
-of `make start` will build both Teleport and the frontend and have them up and running in <5s.
+### Frontend Development
+
+The frontend (Vite) is not part of the Docker setup. It's faster to run Vite separately on the host, pointing at the
+proxy running in Docker (`beast:3080`). This avoids Docker filesystem overhead and gives you native HMR speeds.
 
 This should work on v13+ of Teleport. If you're running v12 or below, checkout the `old` branch and re-run `make build`.
 
@@ -55,9 +57,6 @@ You should clone this directory so it's next to `teleport`.
 ```
 ~/go/src/github.com/gravitational
 └── development
-│   └── frontend
-│   │   │ Dockerfile
-│   │
 │   └── teleport
 │       │ Dockerfile
 │   │
@@ -193,10 +192,9 @@ Which will create the initial admin user for you.
 
 ### Logs
 
-To get and follow the logs from the frontend or the logs from Teleport, you can run
+To get and follow the logs from Teleport, you can run
 
 ```bash
-make frontend-logs
 make teleport-logs
 ```
 
@@ -251,11 +249,10 @@ You'll want to run `make build` first before re-running `make start` when swappi
 
 #### Opening a shell
 
-You can open an interactive shell to either the frontend or Teleport via:
+You can open an interactive shell to the Teleport container via:
 
 ```
 make teleport-shell
-make frontend-shell
 ```
 
 #### tctl
@@ -344,18 +341,6 @@ You'll still need to create a folder for `<service-name>` with a `teleport.yaml`
 
 ### Other info
 
-#### Only running Teleport, not Vite too
-
-You can go into "solo" mode, where Vite isn't running alongside Teleport and instead you're just getting the
-webassets built into the Teleport binary.
-
-To do this, create a file called `.solo`. The presence of this file will result in `docker-compose.solo.yml` being the
-compose file (so all `make` targets will still work with the different file) and you'll be running Teleport without
-Vite in front.
-
-When swapping between solo mode and normal, you just need to re-run `make start`. There's nothing that needs to be
-rebuilt.
-
 #### Config File
 
 The config file for Teleport is in `teleport/teleport.yaml`. This is volume mounted into the container, so if Teleport
@@ -412,8 +397,6 @@ You can also run `make help` to get a list of the available Make targets.
 
 **Commands**
 
-- `make frontend-logs` - alias for `make logs -- -f frontend`
-- `make frontend-shell` - open an interactive shell inside the frontend container
 - `make logs <command>` - runs `docker compose logs <command>`
 - `make tctl <command>` - runs `tctl` inside the Teleport container
 - `make teleport-logs` - alias for `make logs -- -f beast`

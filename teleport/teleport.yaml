@@ -17,6 +17,7 @@ auth_service:
     - "node:node-token"
     - "app,node:app-token"
     - "proxy,node:proxy-token"
+    - "kube:kube-token"
   authentication:
     type: local
     second_factor: on
@@ -230,11 +231,31 @@ proxy_service:
   listen_addr: 0.0.0.0:3023
   tunnel_listen_addr: 0.0.0.0:3024
   web_listen_addr: 0.0.0.0:443
-  public_addr: beast:443
+  public_addr: beast:3080
+  kube_listen_addr: 0.0.0.0:3026
+  kube_public_addr: beast:3026
   https_keypairs:
     - key_file: /var/lib/teleport-certs/server.key
       cert_file: /var/lib/teleport-certs/server.crt
   acme: {}
 
+db_service:
+  enabled: yes
+  databases:
+    - name: "postgres"
+      protocol: "postgres"
+      uri: "teleport-db:5432"
+      tls:
+        mode: insecure
+
 ssh_service:
   enabled: no
+
+windows_desktop_service:
+  enabled: yes
+  listen_addr: 0.0.0.0:3028
+  public_addr: 127.0.0.1:3028
+  static_hosts:
+    - name: thinkpad
+      ad: false          # set to false if NOT using Active Directory
+      addr: 192.168.1.157:3389
